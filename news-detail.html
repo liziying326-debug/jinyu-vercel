@@ -5,336 +5,473 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title id="pageTitle">News | Jin Yu Advertising Material</title>
   <meta name="description" id="pageDesc" content="Advertising material industry insights, material guides and printing technology from Jin Yu – professional manufacturer in Foshan, China." />
-  <meta name="keywords" id="pageKeywords" content="advertising material, PVC foam board, flex banner, vinyl, printing technology, sign making" />
   <link rel="stylesheet" href="styles.css" />
   <script src="i18n.js?v=15"></script>
   <script src="api.js"></script>
   <style>
-    /* ═══════════════════════════════════════════════
-       NEWS DETAIL — COMPLETE STYLES
-    ═══════════════════════════════════════════════ */
-
-    /* ── 顶部 Hero ── */
-    .bd-hero {
-      background: linear-gradient(135deg, #0f2a5e 0%, #1e3a8a 60%, #1d4ed8 100%);
-      padding: 100px 0 48px;  /* 100px top = navbar height 72px + 28px extra spacing */
-      color: #fff;
-      position: relative;
-      overflow: hidden;
-    }
-    .bd-hero::before {
-      content: '';
-      position: absolute; inset: 0;
-      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
-      pointer-events: none;
-    }
-    .bd-hero .container { position: relative; }
-    .bd-breadcrumb { display: flex; align-items: center; gap: 6px; font-size: 13px; margin-bottom: 20px; flex-wrap: wrap; }
-    .bd-breadcrumb a { color: rgba(255,255,255,0.65); text-decoration: none; }
-    .bd-breadcrumb a:hover { color: #fff; }
-    .bd-breadcrumb .sep { color: rgba(255,255,255,0.4); }
-    .bd-breadcrumb .cur { color: rgba(255,255,255,0.9); }
-    .bd-back-btn {
-      background: rgba(255,255,255,0.15);
-      border: 1px solid rgba(255,255,255,0.25);
-      border-radius: 4px;
-      padding: 4px 10px;
-      color: #fff !important;
-      font-size: 12px;
-      transition: background 0.2s;
-    }
-    .bd-back-btn:hover { background: rgba(255,255,255,0.25) !important; color: #fff !important; }
-
-    .bd-meta-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 18px; }
-    .bd-cat-badge {
-      background: var(--accent, #e8751a); color: #fff;
-      font-size: 11px; font-weight: 700; padding: 4px 12px;
-      border-radius: 99px; text-transform: uppercase; letter-spacing: .6px;
-    }
-    .bd-meta-item { display: flex; align-items: center; gap: 5px; font-size: 13px; color: rgba(255,255,255,0.72); }
-    .bd-meta-item svg { flex-shrink: 0; opacity: .75; }
-
-    .bd-hero h1 {
-      font-size: clamp(22px, 3.5vw, 38px); font-weight: 800;
-      line-height: 1.22; margin-bottom: 14px; max-width: 800px;
-    }
-    .bd-hero-sub {
-      font-size: 15px; color: rgba(255,255,255,0.78);
-      max-width: 680px; line-height: 1.65; margin-bottom: 24px;
-    }
-    .bd-hero-tags { display: flex; flex-wrap: wrap; gap: 8px; }
-    .bd-tag {
-      background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.85);
-      font-size: 12px; padding: 4px 12px; border-radius: 99px; border: 1px solid rgba(255,255,255,0.2);
+    /* Page Banner */
+    .page-banner {
+      background: linear-gradient(135deg, #1e3a8a 0%, #1a4a7a 100%);
+      padding: 48px 0 40px;
+      margin-bottom: 0;
     }
 
-    /* ── 封面图 ── */
-    .bd-cover-wrap { margin-top: -1px; }
-    .bd-cover-img { width: 100%; max-height: 420px; object-fit: cover; display: block; }
-
-    /* ── 页面主体布局 ── */
-    .bd-layout {
-      display: grid;
-      grid-template-columns: 1fr 300px;
-      gap: 48px;
+    /* News Detail Layout */
+    .news-detail {
       padding: 48px 0 80px;
+    }
+    .news-detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 48px;
       align-items: start;
     }
-    @media (max-width: 960px) {
-      .bd-layout { grid-template-columns: 1fr; }
-      .bd-sidebar { order: -1; }
+    @media (max-width: 1024px) {
+      .news-detail-grid { grid-template-columns: 1fr; }
     }
 
-    /* ── 目录导航 ToC ── */
-    .bd-toc {
-      background: #f8fafc; border: 1px solid #e2e8f0;
-      border-left: 4px solid var(--primary, #1e3a8a);
-      border-radius: 0 10px 10px 0;
-      padding: 20px 24px; margin-bottom: 36px;
+    /* Main Content Card */
+    .news-detail-main {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+      overflow: hidden;
     }
-    .bd-toc-header {
-      display: flex; align-items: center; justify-content: space-between;
-      cursor: pointer; user-select: none;
-    }
-    .bd-toc-title { font-size: 14px; font-weight: 700; color: var(--primary,#1e3a8a); display: flex; align-items: center; gap: 8px; }
-    .bd-toc-toggle { font-size: 12px; color: var(--gray-500,#6b7280); }
-    .bd-toc-list { list-style: none; padding: 0; margin: 14px 0 0; }
-    .bd-toc-list li { border-bottom: 1px solid #e9eef5; }
-    .bd-toc-list li:last-child { border-bottom: none; }
-    .bd-toc-list a {
-      display: block; padding: 8px 0; font-size: 13px; color: var(--gray-700,#374151);
-      text-decoration: none; transition: color .2s;
-    }
-    .bd-toc-list a:hover { color: var(--primary,#1e3a8a); }
-    .bd-toc-list a.h3-item { padding-left: 16px; color: var(--gray-500,#6b7280); font-size: 12px; }
 
-    /* ── 文章正文 ── */
-    .bd-article { min-width: 0; }
-    .bd-content { line-height: 1.88; color: #374151; font-size: 16px; }
-    .bd-content h2 {
-      font-size: 21px; font-weight: 800; color: var(--primary,#1e3a8a);
-      margin: 40px 0 14px; padding-bottom: 10px;
-      border-bottom: 2px solid #e2e8f0;
-      scroll-margin-top: 80px;
+    /* Cover Image */
+    .news-cover {
+      position: relative;
+      background: #1e293b;
+      border-radius: 16px 16px 0 0;
+      overflow: hidden;
     }
-    .bd-content h3 {
-      font-size: 17px; font-weight: 700; color: #1f2937;
-      margin: 28px 0 10px; scroll-margin-top: 80px;
+    .news-cover img {
+      width: 100%;
+      height: 280px;
+      object-fit: cover;
+      display: block;
+      cursor: pointer;
     }
-    .bd-content p { margin-bottom: 18px; }
-    .bd-content ul, .bd-content ol { padding-left: 24px; margin-bottom: 18px; }
-    .bd-content li { margin-bottom: 9px; }
-    .bd-content strong { color: #111827; }
-    .bd-content a { color: var(--primary,#1e3a8a); text-decoration: underline; }
-    .bd-content blockquote {
-      border-left: 4px solid var(--accent,#e8751a);
-      background: #fff7ed; margin: 28px 0;
-      padding: 18px 22px; border-radius: 0 10px 10px 0;
-      color: #92400e; font-style: italic;
+    .news-cover-empty {
+      width: 100%;
+      height: 160px;
+      background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
     }
-    .bd-content table { width: 100%; border-collapse: collapse; margin: 28px 0; font-size: 14px; }
-    .bd-content th { background: var(--primary,#1e3a8a); color: #fff; padding: 11px 14px; text-align: left; font-weight: 600; }
-    .bd-content td { padding: 10px 14px; border-bottom: 1px solid #e9eef5; }
-    .bd-content tr:nth-child(even) td { background: #f8fafc; }
-    .bd-content img { max-width: 100%; border-radius: 8px; margin: 20px 0; box-shadow: 0 2px 12px rgba(0,0,0,.08); }
-    .bd-content code { background: #f1f5f9; padding: 2px 7px; border-radius: 4px; font-size: 13px; color: #c7254e; }
 
-    /* ── 痛点卡片（用于后端渲染的通用样式）── */
-    .bd-content .pain-card {
-      background: #fff; border: 1px solid #fee2e2; border-left: 4px solid #ef4444;
-      border-radius: 0 10px 10px 0; padding: 18px 20px; margin-bottom: 16px;
+    /* News Content */
+    .news-content {
+      padding: 32px;
     }
-    .bd-content .pain-card h4 { margin: 0 0 8px; font-size: 15px; color: #dc2626; }
-    .bd-content .pain-card p { margin: 0; font-size: 14px; color: #6b7280; }
-    .bd-content .solution-card {
-      background: #f0fdf4; border: 1px solid #bbf7d0; border-left: 4px solid #22c55e;
-      border-radius: 0 10px 10px 0; padding: 18px 20px; margin-bottom: 16px;
+    .news-title {
+      font-family: Montserrat, sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 16px;
+      line-height: 1.3;
     }
-    .bd-content .solution-card h4 { margin: 0 0 8px; font-size: 15px; color: #16a34a; }
-    .bd-content .solution-card p { margin: 0; font-size: 14px; color: #374151; }
+    .news-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+    .news-meta-chip {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      color: var(--gray-600);
+      background: var(--gray-100);
+      padding: 6px 12px;
+      border-radius: 20px;
+    }
+    .news-meta-chip strong { color: var(--primary); font-weight: 600; }
 
-    /* ── 文章底部信息 ── */
-    .bd-article-footer {
-      margin-top: 44px; padding-top: 28px; border-top: 2px solid #e2e8f0;
-      display: flex; align-items: flex-start; justify-content: space-between;
-      flex-wrap: wrap; gap: 20px;
-    }
-    .bd-tags-row .tag-label { font-size: 12px; color: #9ca3af; font-weight: 600; margin-right: 8px; text-transform: uppercase; }
-    .bd-tag-chip {
-      display: inline-block; font-size: 12px; padding: 4px 12px;
-      background: #f1f5f9; border-radius: 99px; color: #4b5563;
-      margin: 3px 3px 3px 0; text-decoration: none;
-    }
-    .bd-tag-chip:hover { background: #dbeafe; color: var(--primary,#1e3a8a); }
-    .bd-share { display: flex; align-items: center; gap: 10px; }
-    .bd-share-label { font-size: 12px; color: #9ca3af; font-weight: 600; text-transform: uppercase; white-space: nowrap; }
-    .bd-share-btn {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 7px 14px; border-radius: 8px; font-size: 12px; font-weight: 600;
-      text-decoration: none; transition: opacity .2s;
-    }
-    .bd-share-btn:hover { opacity: .8; }
-    .bd-share-linkedin { background: #0a66c2; color: #fff; }
-    .bd-share-twitter  { background: #000; color: #fff; }
-    .bd-share-copy     { background: #f1f5f9; color: #374151; border: 1px solid #e2e8f0; cursor: pointer; }
-
-    /* ── FAQ 板块 ── */
-    .bd-faq { margin-top: 52px; }
-    .bd-faq-title { font-size: 22px; font-weight: 800; color: var(--primary,#1e3a8a); margin-bottom: 24px; }
-    .bd-faq-item { border: 1px solid #e2e8f0; border-radius: 10px; margin-bottom: 12px; overflow: hidden; }
-    .bd-faq-q {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 16px 20px; cursor: pointer; background: #f8fafc;
-      font-size: 14px; font-weight: 600; color: #1f2937;
-      transition: background .2s;
-    }
-    .bd-faq-q:hover { background: #eef2ff; }
-    .bd-faq-q svg { flex-shrink: 0; transition: transform .25s; }
-    .bd-faq-item.open .bd-faq-q svg { transform: rotate(180deg); }
-    .bd-faq-item.open .bd-faq-q { background: #eff6ff; color: var(--primary,#1e3a8a); }
-    .bd-faq-a { display: none; padding: 16px 20px; font-size: 14px; color: #4b5563; line-height: 1.75; background: #fff; }
-    .bd-faq-item.open .bd-faq-a { display: block; }
-
-    /* ── Final Thoughts ── */
-    .bd-final {
-      margin-top: 52px; background: linear-gradient(135deg, #eff6ff, #dbeafe);
-      border-radius: 14px; padding: 32px 36px;
-    }
-    .bd-final h2 { font-size: 20px; font-weight: 800; color: var(--primary,#1e3a8a); margin-bottom: 14px; }
-    .bd-final p { font-size: 15px; color: #374151; line-height: 1.75; margin-bottom: 0; }
-
-    /* ── CTA 转化模块 ── */
-    .bd-cta {
-      margin-top: 52px; background: linear-gradient(135deg, #0f2a5e, #1d4ed8);
-      border-radius: 16px; padding: 40px 40px; color: #fff;
-    }
-    .bd-cta h2 { font-size: 22px; font-weight: 800; margin-bottom: 10px; }
-    .bd-cta p { font-size: 15px; color: rgba(255,255,255,0.82); margin-bottom: 24px; line-height: 1.6; }
-    .bd-cta-buttons { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 28px; }
-    .bd-cta-btn-primary {
-      background: var(--accent,#e8751a); color: #fff;
-      padding: 12px 28px; border-radius: 8px; font-weight: 700; font-size: 14px;
-      text-decoration: none; display: inline-block; transition: opacity .2s;
-    }
-    .bd-cta-btn-primary:hover { opacity: .88; }
-    .bd-cta-btn-outline {
-      background: transparent; color: #fff;
-      border: 2px solid rgba(255,255,255,0.5);
-      padding: 12px 28px; border-radius: 8px; font-weight: 700; font-size: 14px;
-      text-decoration: none; display: inline-block; transition: border-color .2s;
-    }
-    .bd-cta-btn-outline:hover { border-color: #fff; }
-    .bd-cta-badges { display: flex; flex-wrap: wrap; gap: 10px; }
-    .bd-badge {
-      display: flex; align-items: center; gap: 6px;
-      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 99px; padding: 5px 14px; font-size: 12px; font-weight: 600;
-    }
-    .bd-badge svg { opacity: .85; }
-
-    /* ── 侧边栏 ── */
-    .bd-sidebar { position: sticky; top: 90px; }
-    .bd-side-card {
-      background: #fff; border: 1px solid #e2e8f0; border-radius: 12px;
-      padding: 22px; margin-bottom: 20px; overflow: hidden;
-    }
-    .bd-side-card h4 {
-      font-size: 13px; font-weight: 700; color: var(--primary,#1e3a8a);
-      text-transform: uppercase; letter-spacing: .5px; margin-bottom: 16px;
-    }
-    /* 侧边栏相关文章 */
-    .bd-related-item {
-      display: flex; gap: 10px; padding: 10px 0;
-      border-bottom: 1px solid #f1f5f9; text-decoration: none; color: inherit;
-    }
-    .bd-related-item:last-child { border-bottom: none; padding-bottom: 0; }
-    .bd-related-thumb {
-      width: 60px; height: 60px; border-radius: 8px; object-fit: cover;
-      flex-shrink: 0; background: #e2e8f0;
-    }
-    .bd-related-thumb-placeholder {
-      width: 60px; height: 60px; border-radius: 8px; flex-shrink: 0;
-      background: linear-gradient(135deg,#dbeafe,#bfdbfe);
-      display: flex; align-items: center; justify-content: center; font-size: 22px;
-    }
-    .bd-related-info h5 {
-      font-size: 13px; font-weight: 600; color: #1f2937; margin-bottom: 4px; line-height: 1.4;
-      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
-    }
-    .bd-related-info .rdate { font-size: 11px; color: #9ca3af; }
-    .bd-related-item:hover h5 { color: var(--primary,#1e3a8a); }
-    /* 侧边栏询盘卡 */
-    .bd-side-enquiry {
-      background: linear-gradient(135deg,#0f2a5e,#1d4ed8);
-      color: #fff; border: none;
-    }
-    .bd-side-enquiry h4 { color: #fff; }
-    .bd-side-enquiry p { font-size: 13px; color: rgba(255,255,255,0.82); margin-bottom: 14px; line-height: 1.55; }
-    /* 侧边栏快速链接 */
-    .bd-quick-link {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 9px 0; border-bottom: 1px solid #f1f5f9;
-      font-size: 13px; color: #4b5563; text-decoration: none;
-    }
-    .bd-quick-link:last-child { border-bottom: none; }
-    .bd-quick-link:hover { color: var(--primary,#1e3a8a); }
-    .bd-quick-link svg { opacity: .5; }
-
-    /* ── 底部相关推荐 ── */
-    .bd-more { padding: 56px 0 72px; background: #f8fafc; }
-    .bd-more-title {
-      font-size: 22px; font-weight: 800; color: var(--primary,#1e3a8a);
+    /* Article Body */
+    .news-body {
+      font-size: 15px;
+      color: var(--gray-700);
+      line-height: 1.8;
       margin-bottom: 32px;
     }
-    .bd-more-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; }
-    @media (max-width:768px) { .bd-more-grid { grid-template-columns: 1fr; } }
-    @media (max-width:960px) and (min-width:769px) { .bd-more-grid { grid-template-columns: repeat(2,1fr); } }
-    .bd-more-card {
-      background: #fff; border-radius: 12px; overflow: hidden;
-      border: 1px solid #e2e8f0; text-decoration: none; color: inherit; display: block;
-      transition: box-shadow .2s, transform .2s;
+    .news-body h2 {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--primary);
+      margin: 24px 0 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #e2e8f0;
     }
-    .bd-more-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,.1); transform: translateY(-3px); }
-    .bd-more-card-img { width: 100%; height: 160px; object-fit: cover; background: linear-gradient(135deg,#dbeafe,#bfdbfe); display: block; }
-    .bd-more-card-img-placeholder { width:100%;height:160px;background:linear-gradient(135deg,#dbeafe,#bfdbfe);display:flex;align-items:center;justify-content:center;font-size:36px; }
-    .bd-more-card-body { padding: 16px 18px; }
-    .bd-more-card-body .cat { font-size: 11px; font-weight: 700; color: var(--accent,#e8751a); text-transform: uppercase; letter-spacing:.5px; margin-bottom: 6px; }
-    .bd-more-card-body h3 { font-size: 15px; font-weight: 700; color: #1f2937; line-height: 1.4; margin-bottom: 8px;
-      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-    .bd-more-card-body p { font-size: 13px; color: #6b7280; margin-bottom: 12px; line-height: 1.5;
-      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-    .bd-more-card-body .read-more { font-size: 13px; font-weight: 600; color: var(--primary,#1e3a8a); }
+    .news-body h2:first-child { margin-top: 0; }
+    .news-body p { margin-bottom: 16px; }
+    .news-body ul, .news-body ol {
+      margin: 16px 0;
+      padding-left: 24px;
+    }
+    .news-body li { margin-bottom: 8px; }
+    .news-body strong { color: var(--primary); font-weight: 600; }
+    .news-body blockquote {
+      border-left: 4px solid var(--accent-orange);
+      background: #fff7ed;
+      margin: 28px 0;
+      padding: 18px 22px;
+      border-radius: 0 10px 10px 0;
+      color: #92400e;
+      font-style: italic;
+    }
+    .news-body table { width: 100%; border-collapse: collapse; margin: 28px 0; font-size: 14px; }
+    .news-body th { background: var(--primary); color: #fff; padding: 11px 14px; text-align: left; font-weight: 600; }
+    .news-body td { padding: 10px 14px; border-bottom: 1px solid #e9eef5; }
+    .news-body tr:nth-child(even) td { background: #f8fafc; }
+    .news-body img { max-width: 100%; border-radius: 8px; margin: 20px 0; box-shadow: 0 2px 12px rgba(0,0,0,.08); }
 
-    /* ── 加载/错误 ── */
-    .bd-loading { text-align: center; padding: 130px 0; color: #9ca3af; font-size: 14px; }
-    .bd-error { text-align: center; padding: 130px 0; }
-    .bd-error h2 { color: #6b7280; margin-bottom: 12px; }
-    .bd-error p { color: #9ca3af; }
-
-    /* ── 进度条 ── */
-    .bd-progress-bar {
-      position: fixed; top: 0; left: 0; height: 3px;
-      background: var(--accent,#e8751a); width: 0; z-index: 9999;
-      transition: width .1s;
+    /* Tags Section */
+    .news-tags-section {
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-bottom: 24px;
+    }
+    .news-tags-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--gray-500);
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      margin-bottom: 12px;
+    }
+    .news-tags-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .news-tag {
+      font-size: 13px;
+      background: #eff6ff;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-weight: 500;
     }
 
-    /* ── 返回按钮 ── */
-    .bd-back {
-      display: inline-flex; align-items: center; gap: 7px;
-      color: var(--primary,#1e3a8a); font-size: 13px; font-weight: 600;
-      text-decoration: none; margin-bottom: 28px;
+    /* Outcomes / Key Takeaways */
+    .news-takeaways {
+      background: linear-gradient(135deg, var(--primary) 0%, #1a4a7a 100%);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
     }
-    .bd-back:hover { text-decoration: underline; }
+    .news-takeaways-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.6);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+    .news-takeaway-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 14px;
+      color: rgba(255,255,255,0.95);
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+    .news-takeaway-item:last-child { margin-bottom: 0; }
+    .news-takeaway-item::before {
+      content: '✓';
+      color: #60a5fa;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* CTA Section */
+    .news-cta {
+      background: linear-gradient(135deg, #0f2a5e, #1d4ed8);
+      border-radius: 12px;
+      padding: 32px;
+      color: #fff;
+      text-align: center;
+    }
+    .news-cta h3 {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 10px;
+      color: #fff;
+    }
+    .news-cta p {
+      font-size: 14px;
+      color: rgba(255,255,255,0.82);
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+    .news-cta-btns {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .news-cta-btn-primary {
+      background: var(--accent-orange);
+      color: #fff;
+      padding: 12px 28px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 14px;
+      text-decoration: none;
+      display: inline-block;
+      transition: opacity .2s;
+    }
+    .news-cta-btn-primary:hover { opacity: .88; }
+    .news-cta-btn-outline {
+      background: transparent;
+      color: #fff;
+      border: 2px solid rgba(255,255,255,0.5);
+      padding: 12px 28px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 14px;
+      text-decoration: none;
+      display: inline-block;
+      transition: border-color .2s;
+    }
+    .news-cta-btn-outline:hover { border-color: #fff; }
+
+    /* Sidebar */
+    .news-detail-sidebar {
+      position: sticky;
+      top: 100px;
+    }
+
+    /* Related Articles */
+    .related-articles {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+      padding: 24px;
+    }
+    .related-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #e2e8f0;
+    }
+    .related-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .related-item {
+      display: flex;
+      gap: 12px;
+      padding: 12px;
+      border-radius: 10px;
+      transition: background 0.2s;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+    }
+    .related-item:hover { background: #f1f5f9; }
+    .related-thumb {
+      width: 80px;
+      height: 60px;
+      border-radius: 8px;
+      overflow: hidden;
+      flex-shrink: 0;
+      background: #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+    .related-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .related-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .related-item-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 4px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .related-item-date {
+      font-size: 12px;
+      color: var(--gray-500);
+    }
+
+    /* Contact Card */
+    .contact-card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+      padding: 24px;
+      margin-top: 24px;
+    }
+    .contact-card h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 16px;
+    }
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--gray-700);
+      margin-bottom: 12px;
+    }
+    .contact-item:last-child { margin-bottom: 0; }
+    .contact-icon {
+      width: 36px;
+      height: 36px;
+      background: #eff6ff;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    /* Back Button */
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--gray-600);
+      font-size: 14px;
+      margin-bottom: 24px;
+      transition: color 0.2s;
+      text-decoration: none;
+    }
+    .back-btn:hover { color: var(--primary); }
+
+    /* Loading */
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid #e2e8f0;
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 80px auto;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Lightbox */
+    .lightbox-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.92);
+      z-index: 10000;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 20px;
+    }
+    .lightbox-overlay.show { display: flex; }
+    .lightbox-content {
+      max-width: 90%;
+      max-height: 85vh;
+      position: relative;
+    }
+    .lightbox-content img {
+      max-width: 100%;
+      max-height: 85vh;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+    .lightbox-close {
+      position: absolute;
+      top: -50px;
+      right: 0;
+      width: 40px;
+      height: 40px;
+      background: rgba(255,255,255,0.15);
+      border: none;
+      border-radius: 50%;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+    .lightbox-close:hover { background: rgba(255,255,255,0.3); }
+    .lightbox-caption {
+      color: rgba(255,255,255,0.8);
+      font-size: 14px;
+      margin-top: 16px;
+      text-align: center;
+    }
+
+    /* FAQ in Article */
+    .news-faq {
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    .news-faq-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 16px;
+    }
+    .news-faq-item {
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      overflow: hidden;
+      background: #fff;
+    }
+    .news-faq-q {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      color: #1f2937;
+      transition: background .2s;
+    }
+    .news-faq-q:hover { background: #eff6ff; color: var(--primary); }
+    .news-faq-q svg { flex-shrink: 0; transition: transform .25s; }
+    .news-faq-item.open .news-faq-q svg { transform: rotate(180deg); }
+    .news-faq-item.open .news-faq-q { background: #eff6ff; color: var(--primary); }
+    .news-faq-a {
+      display: none;
+      padding: 14px 18px;
+      font-size: 14px;
+      color: #4b5563;
+      line-height: 1.75;
+      border-top: 1px solid #e2e8f0;
+    }
+    .news-faq-item.open .news-faq-a { display: block; }
   </style>
 </head>
 <body id="top">
 
-<!-- ── 阅读进度条 ── -->
-<div class="bd-progress-bar" id="progressBar"></div>
-
-<!-- ══════════════════════════════════════════════
-     NAV
-══════════════════════════════════════════════ -->
 <nav class="navbar" id="navbar">
   <div class="container">
     <div class="nav-inner">
@@ -352,55 +489,23 @@
       </a>
       <ul class="nav-menu" id="navMenu">
         <li class="nav-item"><a href="index.html" class="nav-link" data-i18n="nav.home">Home</a></li>
-        <li class="nav-item">
-          <a href="products.html" class="nav-link" data-i18n="nav.products">Products <svg viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></a>
-          <div class="dropdown">
-            <a href="products.html#advertising-media" data-i18n="products_page.cat.advertisingMedia">Advertising Media</a>
-            <a href="products.html#advertising-panel" data-i18n="products_page.cat.advertisingPanel">Advertising Panel</a>
-            <a href="products.html#display-stand" data-i18n="products_page.cat.displayStand">Display Stand</a>
-            <a href="products.html#accessory" data-i18n="products_page.cat.accessory">Accessory</a>
-          </div>
-        </li>
-        <li class="nav-item">
-          <a href="applications.html" class="nav-link" data-i18n="nav.applications">Applications <svg viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></a>
-          <div class="dropdown">
-            <a href="applications.html#sign-board" data-i18n="nav.applications_sub.signBoard">Sign Board</a>
-            <a href="applications.html#light-box" data-i18n="nav.applications_sub.lightBox">Light Box</a>
-            <a href="applications.html#digital-printing" data-i18n="nav.applications_sub.digitalPrinting">Digital Printing</a>
-            <a href="applications.html#outdoor-advertising" data-i18n="nav.applications_sub.outdoorAdvertising">Outdoor Advertising</a>
-            <a href="applications.html#exhibition-display" data-i18n="nav.applications_sub.exhibitionDisplay">Exhibition Display</a>
-          </div>
-        </li>
-        <li class="nav-item">
-          <a href="case-studies.html" class="nav-link" data-i18n="nav.caseStudies">Case Studies <svg viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></a>
-          <div class="dropdown">
-            <a href="case-studies.html#supermarket">Supermarket Sign</a>
-            <a href="case-studies.html#mall-lightbox">Mall Light Box</a>
-            <a href="case-studies.html#outdoor-billboard">Outdoor Billboard</a>
-            <a href="case-studies.html#shop-sign">Shop Sign</a>
-          </div>
-        </li>
-        <li class="nav-item">
-          <a href="news.html" class="nav-link active" data-i18n="nav.news">News <svg viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></a>
-          <div class="dropdown">
-            <a href="news.html#industry-knowledge">Industry Knowledge</a>
-            <a href="news.html#material-guide">Material Guide</a>
-            <a href="news.html#printing-technology">Printing Technology</a>
-          </div>
-        </li>
+        <li class="nav-item"><a href="products.html" class="nav-link" data-i18n="nav.products">Products</a></li>
+        <li class="nav-item"><a href="applications.html" class="nav-link" data-i18n="nav.applications">Applications</a></li>
+        <li class="nav-item"><a href="case-studies.html" class="nav-link" data-i18n="nav.caseStudies">Case Studies</a></li>
+        <li class="nav-item"><a href="news.html" class="nav-link active" data-i18n="nav.news">News</a></li>
         <li class="nav-item"><a href="about.html" class="nav-link" data-i18n="nav.aboutUs">About Us</a></li>
         <li class="nav-item"><a href="contact.html" class="nav-link" data-i18n="nav.contactUs">Contact Us</a></li>
       </ul>
       <div class="nav-right">
         <div class="nav-social">
-          <a href="https://wa.me/8613808828019" target="_blank" rel="noopener" class="nav-social-icon whatsapp" title="WhatsApp">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          <a href="https://facebook.com" target="_blank" rel="noopener" class="nav-social-icon facebook" title="Facebook">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.886v2.267h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
           </a>
         </div>
         <div class="nav-divider"></div>
         <div class="nav-lang" id="language-switcher">
           <div class="lang-display">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
             <span class="lang-code">EN</span>
           </div>
         </div>
@@ -412,353 +517,151 @@
   </div>
 </nav>
 
-<!-- ══════════════════════════════════════════════
-     LOADING
-══════════════════════════════════════════════ -->
-<div id="bdLoading" class="bd-loading">
-  <p>Loading article...</p>
-</div>
-
-<!-- ══════════════════════════════════════════════
-     ERROR
-══════════════════════════════════════════════ -->
-<div id="bdError" class="bd-error" style="display:none;">
+<div class="page-banner">
   <div class="container">
-    <div style="font-size:56px;margin-bottom:16px;">📄</div>
-    <h2 data-i18n="blog_page.detail.articleNotFound">Article Not Found</h2>
-    <p data-i18n="blog_page.detail.articleNotFoundDesc">This article may have been removed or the link is incorrect.</p>
-    <a href="news.html" class="btn btn-primary" style="margin-top:24px;" data-i18n="blog_page.detail.backToBlog">← Back to News</a>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════════
-     一、HERO — 标题 + 发布信息
-══════════════════════════════════════════════ -->
-<div id="bdHero" style="display:none;">
-  <div class="bd-hero">
-    <div class="container">
-      <!-- 面包屑 + 返回按钮 -->
-      <div class="bd-breadcrumb">
-        <a href="news.html" class="bd-back-btn" data-i18n="blog_page.detail.backBtn">← Back</a>
-        <span class="sep">›</span>
-        <a href="index.html" data-i18n="nav.home">Home</a>
-        <span class="sep">›</span>
-        <a href="news.html" data-i18n="nav.news">News</a>
-        <span class="sep">›</span>
-        <span class="cur" id="heroCatCrumb"></span>
-        <span class="sep" id="heroTitleSep">›</span>
-        <span class="cur" id="heroTitleCrumb" style="opacity:.7;max-width:300px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:inline-block;vertical-align:middle;"></span>
-      </div>
-      <!-- 分类 + 发布信息 -->
-      <div class="bd-meta-row">
-        <span class="bd-cat-badge" id="heroCatBadge"></span>
-        <span class="bd-meta-item">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          <span id="heroPublished"></span>
-        </span>
-        <span class="bd-meta-item" id="heroUpdatedWrap" style="display:none;">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
-          <span data-i18n="blog_page.detail.updated">Updated</span> <span id="heroUpdated"></span>
-        </span>
-        <span class="bd-meta-item">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          <span id="heroAuthor"></span>
-        </span>
-        <span class="bd-meta-item" id="heroReadTime">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          <span id="heroReadTimeText"></span>
-        </span>
-        <span class="bd-meta-item" id="heroViewsWrap" style="display:none;">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-          <span id="heroViews"></span>
-        </span>
-      </div>
-      <!-- 主标题 -->
-      <h1 id="heroTitle"></h1>
-      <!-- 标签 -->
-      <div class="bd-hero-tags" id="heroTags"></div>
+    <div class="breadcrumb">
+      <a href="index.html" data-i18n="nav.home">Home</a>
+      <span class="sep">›</span>
+      <a href="news.html" data-i18n="nav.news">News</a>
+      <span class="sep">›</span>
+      <span class="current" id="breadcrumbTitle">Loading...</span>
     </div>
-  </div>
-
-  <!-- 封面图 -->
-  <div class="bd-cover-wrap" id="heroCoverWrap" style="display:none;">
-    <img id="heroCoverImg" src="" alt="" class="bd-cover-img" />
+    <h1 id="pageTitle" data-i18n="blog_page.detail.pageTitle">News Detail</h1>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════════
-     二～七、正文主体 + 侧边栏
-══════════════════════════════════════════════ -->
-<div id="bdMain" style="display:none;">
+<div class="news-detail">
   <div class="container">
-    <div class="bd-layout">
+    <a href="news.html" class="back-btn" data-i18n="blog_page.detail.backBtn">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Back to News
+    </a>
 
-      <!-- ── 正文列 ── -->
-      <div class="bd-article">
-        <a href="news.html" class="bd-back">
-          <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 10H5M10 5l-5 5 5 5"/></svg>
-          <span data-i18n="blog_page.detail.backToBlog">Back to Blog</span>
-        </a>
+    <div id="loadingContainer">
+      <div class="loading-spinner"></div>
+    </div>
 
-        <!-- 三、目录导航 ToC -->
-        <div class="bd-toc" id="bdToc" style="display:none;">
-          <div class="bd-toc-header" onclick="toggleToc()">
-            <div class="bd-toc-title">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-              <span data-i18n="blog_page.detail.tableOfContents">Table of Contents</span>
+    <div class="news-detail-grid" id="newsDetailContent" style="display:none;">
+      <!-- Main Content Card -->
+      <div class="news-detail-main">
+        <!-- Cover Image -->
+        <div class="news-cover" id="newsCover" onclick="openLightbox()">
+          <img id="coverImg" src="" alt="" style="display:none;" />
+          <div class="news-cover-empty" id="coverEmpty">📰</div>
+        </div>
+
+        <!-- Article Content -->
+        <div class="news-content">
+          <h1 class="news-title" id="newsTitle"></h1>
+          <div class="news-meta" id="newsMeta"></div>
+
+          <!-- Article Body -->
+          <div class="news-body" id="newsBody"></div>
+
+          <!-- Tags -->
+          <div class="news-tags-section" id="tagsSection" style="display:none;">
+            <div class="news-tags-label" data-i18n="blog_page.detail.tagsLabel">Tags</div>
+            <div class="news-tags-list" id="tagsList"></div>
+          </div>
+
+          <!-- Key Takeaways -->
+          <div class="news-takeaways" id="takeawaysSection" style="display:none;">
+            <div class="news-takeaways-label" data-i18n="blog_page.detail.keyTakeaways">Key Takeaways</div>
+            <div id="takeawaysList"></div>
+          </div>
+
+          <!-- FAQ -->
+          <div class="news-faq" id="faqSection" style="display:none;">
+            <div class="news-faq-title" data-i18n="blog_page.detail.faqTitle">Frequently Asked Questions</div>
+            <div id="faqItems"></div>
+          </div>
+
+          <!-- CTA -->
+          <div class="news-cta">
+            <h3 data-i18n="blog_page.detail.ctaTitle">Need Material Samples or Technical Support?</h3>
+            <p data-i18n="blog_page.detail.ctaDesc">Our technical team can help you choose the right materials for your project. Get factory-direct pricing and free samples.</p>
+            <div class="news-cta-btns">
+              <a href="contact.html" class="news-cta-btn-primary" data-i18n="blog_page.detail.ctaBtn1">Request Samples</a>
+              <a href="products.html" class="news-cta-btn-outline" data-i18n="blog_page.detail.ctaBtn2">View Products</a>
             </div>
-            <span class="bd-toc-toggle" id="tocToggleText" data-i18n="blog_page.detail.tocHide">Hide</span>
-          </div>
-          <ul class="bd-toc-list" id="bdTocList"></ul>
-        </div>
-
-        <!-- 正文内容 -->
-        <div class="bd-content" id="bdContent"></div>
-
-        <!-- 五、FAQ 常见问题 -->
-        <div class="bd-faq" id="bdFaq" style="display:none;">
-          <h2 class="bd-faq-title">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:8px;"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-            <span data-i18n="blog_page.detail.faqTitle">Frequently Asked Questions</span>
-          </h2>
-          <div id="bdFaqItems"></div>
-        </div>
-
-        <!-- 六、Final Thoughts -->
-        <div class="bd-final" id="bdFinal" style="display:none;">
-          <h2 data-i18n="blog_page.detail.finalThoughts">Final Thoughts</h2>
-          <p id="bdFinalText"></p>
-        </div>
-
-        <!-- 七、CTA 转化模块 -->
-        <div class="bd-cta" id="bdCta">
-          <h2 data-i18n="blog_page.detail.ctaTitle">Ready to Source Quality Advertising Materials?</h2>
-          <p data-i18n="blog_page.detail.ctaDesc">Get factory-direct pricing, free samples, and expert material selection advice. Our team responds within 24 hours.</p>
-          <div class="bd-cta-buttons">
-            <a href="contact.html" class="bd-cta-btn-primary" data-i18n="blog_page.detail.ctaBtn1">Get a Free Quote</a>
-            <a href="contact.html#samples" class="bd-cta-btn-outline" data-i18n="blog_page.detail.ctaBtn2">Request Samples</a>
-            <a href="products.html" class="bd-cta-btn-outline" data-i18n="blog_page.detail.ctaBtn3">Browse Products</a>
-          </div>
-          <div class="bd-cta-badges">
-            <span class="bd-badge">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-              <span data-i18n="blog_page.detail.ctaBadge1">Factory Direct</span>
-            </span>
-            <span class="bd-badge">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-              <span data-i18n="blog_page.detail.ctaBadge2">ISO 9001 Certified</span>
-            </span>
-            <span class="bd-badge">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-              <span data-i18n="blog_page.detail.ctaBadge3">Free Samples</span>
-            </span>
-            <span class="bd-badge">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-              <span data-i18n="blog_page.detail.ctaBadge4">OEM / Custom Orders</span>
-            </span>
-            <span class="bd-badge">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-              <span data-i18n="blog_page.detail.ctaBadge5">Export Ready</span>
-            </span>
-          </div>
-        </div>
-
-        <!-- 文章底部：标签 + 分享 -->
-        <div class="bd-article-footer">
-          <div class="bd-tags-row" id="bdTagsRow">
-            <span class="tag-label" data-i18n="blog_page.detail.tagsLabel">Tags:</span>
-          </div>
-          <div class="bd-share">
-            <span class="bd-share-label" data-i18n="blog_page.detail.shareLabel">Share:</span>
-            <a class="bd-share-btn bd-share-linkedin" id="shareLinkedIn" href="#" target="_blank" rel="noopener">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-              LinkedIn
-            </a>
-            <a class="bd-share-btn bd-share-twitter" id="shareTwitter" href="#" target="_blank" rel="noopener">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-              X / Twitter
-            </a>
-            <button class="bd-share-btn bd-share-copy" onclick="copyLink()">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-              <span data-i18n="blog_page.detail.copyLink">Copy Link</span>
-            </button>
           </div>
         </div>
       </div>
 
-      <!-- ── 侧边栏 ── -->
-      <aside class="bd-sidebar">
-        <!-- 询盘卡 -->
-        <div class="bd-side-card bd-side-enquiry">
-          <h4 data-i18n="blog_page.detail.sideEnquiryTitle">Get a Quote</h4>
-          <p data-i18n="blog_page.detail.sideEnquiryDesc">Factory-direct pricing for PVC boards, flex banners, vinyl, and 50+ advertising materials. Free samples available.</p>
-          <a href="contact.html" class="bd-cta-btn-primary" style="display:block;text-align:center;font-size:13px;padding:10px 16px;" data-i18n="blog_page.detail.sideEnquiryBtn">Request Quotation</a>
-          <div style="margin-top:12px;display:flex;align-items:center;gap:8px;font-size:12px;color:rgba(255,255,255,0.7);">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            <span data-i18n="blog_page.detail.sideEnquiryReply">Replies within 24 hours</span>
+      <!-- Sidebar -->
+      <div class="news-detail-sidebar">
+        <!-- Related Articles -->
+        <div class="related-articles">
+          <div class="related-title" data-i18n="blog_page.detail.relatedArticles">Related Articles</div>
+          <div class="related-list" id="relatedList"></div>
+        </div>
+
+        <!-- Contact Card -->
+        <div class="contact-card">
+          <h3 data-i18n="blog_page.detail.contactTitle">Get a Quote for Your Project</h3>
+          <div class="contact-item">
+            <div class="contact-icon">📧</div>
+            <div>
+              <div style="font-size:12px;color:var(--gray-500);" data-i18n="blog_page.detail.email">Email</div>
+              <a href="mailto:vivian@materials-ad.com">vivian@materials-ad.com</a>
+            </div>
           </div>
-        </div>
-
-        <!-- 相关文章 -->
-        <div class="bd-side-card">
-          <h4 data-i18n="blog_page.detail.relatedArticles">Related Articles</h4>
-          <div id="bdSideRelated">
-            <p style="color:#9ca3af;font-size:13px;" data-i18n="blog_page.detail.loading">Loading…</p>
+          <div class="contact-item">
+            <div class="contact-icon">💬</div>
+            <div>
+              <div style="font-size:12px;color:var(--gray-500);">WhatsApp</div>
+              <a href="https://wa.me/8613808828019" target="_blank">+86 138 0882 8019</a>
+            </div>
           </div>
+          <a href="contact.html" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:16px;" data-i18n="blog_page.detail.contactBtn">Contact Us</a>
         </div>
-
-        <!-- 快速导航 -->
-        <div class="bd-side-card">
-          <h4 data-i18n="blog_page.detail.sideExplore">Explore</h4>
-          <a href="products.html" class="bd-quick-link">
-            <span data-i18n="blog_page.detail.sideAllProducts">All Products</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-          </a>
-          <a href="applications.html" class="bd-quick-link">
-            <span data-i18n="blog_page.detail.sideApplications">Applications</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-          </a>
-          <a href="case-studies.html" class="bd-quick-link">
-            <span data-i18n="blog_page.detail.sideCaseStudies">Case Studies</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-          </a>
-          <a href="about.html" class="bd-quick-link">
-            <span data-i18n="blog_page.detail.sideAbout">About Jin Yu</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-          </a>
-          <a href="contact.html" class="bd-quick-link">
-            <span data-i18n="blog_page.detail.sideContact">Contact Us</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-          </a>
-        </div>
-      </aside>
-
-    </div><!-- .bd-layout -->
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════════
-     八、底部更多文章推荐
-══════════════════════════════════════════════ -->
-<div id="bdMore" style="display:none;">
-  <div class="bd-more">
-    <div class="container">
-      <h2 class="bd-more-title" data-i18n="blog_page.detail.moreTitle">More From Our Blog</h2>
-      <div class="bd-more-grid" id="bdMoreGrid"></div>
-      <div style="text-align:center;margin-top:36px;">
-        <a href="news.html" class="btn btn-outline" style="min-width:180px;" data-i18n="blog_page.detail.viewAllArticles">View All Articles</a>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════════
-     FOOTER
-══════════════════════════════════════════════ -->
+<!-- Lightbox -->
+<div class="lightbox-overlay" id="lightboxOverlay" onclick="if(event.target===this)closeLightbox()">
+  <div class="lightbox-content">
+    <button class="lightbox-close" onclick="closeLightbox()" title="Close (Esc)">×</button>
+    <img id="lightboxImg" src="" alt="" />
+  </div>
+  <div class="lightbox-caption" id="lightboxCaption"></div>
+</div>
+
 <footer class="footer">
   <div class="container">
-    <div class="footer-grid">
-      <div class="footer-brand">
-        <div class="footer-logo">
-          <div class="logo-icon">
-            <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M8 28V12L20 8L32 12V28L20 32L8 28Z" stroke="#E8751A" stroke-width="2.5" fill="none"/>
-              <path d="M8 12L20 16L32 12" stroke="#E8751A" stroke-width="2.5"/>
-              <path d="M20 16V32" stroke="#E8751A" stroke-width="2.5"/>
-              <circle cx="20" cy="24" r="3" fill="#E8751A"/>
-            </svg>
-          </div>
-          <div class="logo-text"><div class="logo-name">Jin Yu</div><div class="logo-sub">Advertising Material</div></div>
-        </div>
-        <p data-i18n="footer.description">Professional manufacturer of advertising materials. Serving global markets with quality products since 2008.</p>
-      </div>
-      <div class="footer-col">
-        <h4 data-i18n="footer.products">Products</h4>
-        <ul>
-          <li><a href="products.html#advertising-media">Advertising Media</a></li>
-          <li><a href="products.html#advertising-panel">Advertising Panel</a></li>
-          <li><a href="products.html#display-stand">Display Stand</a></li>
-          <li><a href="products.html#accessory">Accessory</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4 data-i18n="footer.company">Company</h4>
-        <ul>
-          <li><a href="about.html">About Us</a></li>
-          <li><a href="case-studies.html">Case Studies</a></li>
-          <li><a href="news.html">News</a></li>
-          <li><a href="contact.html">Contact Us</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4 data-i18n="footer.contact">Contact</h4>
-        <ul>
-          <li><a href="tel:+8613808828019">+86 138 0882 8019</a></li>
-          <li><a href="mailto:info@jinyu2021.com">info@jinyu2021.com</a></li>
-          <li><span>Foshan, Guangdong, China</span></li>
-        </ul>
-      </div>
-    </div>
     <div class="footer-bottom">
       <p data-i18n="footer.copyright">© 2024 Foshan Jin Yu Advertising Material Co., Ltd. All Rights Reserved.</p>
     </div>
   </div>
 </footer>
 
-<!-- FAB -->
-<div class="fab-group">
-  <a href="#top" class="fab fab-top" id="fabTop" title="Back to Top" style="opacity:0;">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 15l-6-6-6 6"/></svg>
-  </a>
-  <a href="contact.html#quote-faq" class="fab fab-faq" title="Get Quote">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12l7 7 7-7"/></svg>
-  </a>
-  <a href="https://wa.me/8613808828019" target="_blank" class="fab fab-wa" title="WhatsApp">
-    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-  </a>
-</div>
-
-<!-- ══════════════════════════════════════════════
-     SCRIPTS
-══════════════════════════════════════════════ -->
 <script>
 (function() {
   'use strict';
 
-  // ══════════════════════════════════════════════════════════════════
-  // apiTranslate — 独立翻译函数，直接走本地 /api/translate 代理
-  // 不依赖 window.autoTranslate，确保全部翻译请求走统一后台接口
-  // ══════════════════════════════════════════════════════════════════
-  var _TR_CACHE_PFX = 'jynd_tr_';  // sessionStorage key 前缀
-  var _TR_PENDING   = {};           // 进行中的请求复用
+  // Translation helpers
+  var _TR_CACHE = {};
+  var _TR_PENDING = {};
 
   function apiTranslate(text, from, to) {
     return new Promise(function(resolve) {
       if (!text || !String(text).trim()) return resolve('');
       var t = String(text).trim();
       if (from === to) return resolve(t);
-      if (to === 'en' && from === 'en') return resolve(t);
 
-      var cacheKey = _TR_CACHE_PFX + to + '_' + from + '_' + t.slice(0, 100);
-      try {
-        var cached = sessionStorage.getItem(cacheKey);
-        if (cached) return resolve(cached);
-      } catch(e) {}
+      var cacheKey = to + '_' + from + '_' + t.slice(0, 100);
+      try { if (sessionStorage.getItem(cacheKey)) return resolve(sessionStorage.getItem(cacheKey)); } catch(e) {}
 
-      // 复用并发相同请求
-      if (_TR_PENDING[cacheKey]) {
-        _TR_PENDING[cacheKey].push(resolve);
-        return;
-      }
+      if (_TR_PENDING[cacheKey]) { _TR_PENDING[cacheKey].push(resolve); return; }
       _TR_PENDING[cacheKey] = [resolve];
 
-      function done(result) {
-        if (result && result !== t) {
-          try { sessionStorage.setItem(cacheKey, result); } catch(e) {}
-        }
+      function done(r) {
+        if (r && r !== t) try { sessionStorage.setItem(cacheKey, r); } catch(e) {}
         var cbs = _TR_PENDING[cacheKey] || [];
         delete _TR_PENDING[cacheKey];
-        cbs.forEach(function(cb) { cb(result || t); });
+        cbs.forEach(function(cb) { cb(r || t); });
       }
 
       fetch('/api/translate', {
@@ -772,835 +675,402 @@
     });
   }
 
-  // ── normalizePost ────────────────────────────
-  // 将后台 langData 嵌套结构转为前台扁平字段
+  // normalizePost — convert langData to flat fields
   function normalizePost(p) {
-    // 如果已经是扁平格式（有 title_zh 或 title_en），直接返回
     if (p.title_zh || p.title_en || p.excerpt) return p;
-    
     var out = Object.assign({}, p);
     var ld = p.langData;
-    
     if (ld) {
-      // 设置各语言版本字段
       if (ld.en) {
-        if (ld.en.title) out.title_en = ld.en.title;
-        if (ld.en.content) out.content_en = ld.en.content;
+        if (ld.en.title) out.title_en = out.title = ld.en.title;
+        if (ld.en.content) out.content_en = out.content = ld.en.content;
         if (ld.en.seoTitle) out.seoTitle_en = ld.en.seoTitle;
         if (ld.en.alt) out.alt_en = ld.en.alt;
       }
       if (ld.zh) {
         if (ld.zh.title) out.title_zh = ld.zh.title;
         if (ld.zh.content) out.content_zh = ld.zh.content;
-        if (ld.zh.seoTitle) out.seoTitle_zh = ld.zh.seoTitle;
-        if (ld.zh.alt) out.alt_zh = ld.zh.alt;
       }
       if (ld.vi) {
         if (ld.vi.title) out.title_vi = ld.vi.title;
         if (ld.vi.content) out.content_vi = ld.vi.content;
       }
-      if (ld.tl) {
-        if (ld.tl.title) out.title_tl = ld.tl.title;
-        if (ld.tl.content) out.content_tl = ld.tl.content;
+      if (ld.ph || ld.tl) {
+        var ph = ld.ph || ld.tl || {};
+        if (ph.title) out.title_tl = ph.title;
+        if (ph.content) out.content_tl = ph.content;
       }
     }
-    
-    // slug：如果没有 slug，使用 news-{id} 格式
-    if (!out.slug && out.id) {
-      out.slug = 'news-' + out.id;
+    if (!out.slug && out.id) out.slug = 'news-' + out.id;
+    // 从 images 数组提取封面图（仅当 cover_image 不存在时）
+    if (!out.cover_image && Array.isArray(p.images) && p.images.length) {
+      out.cover_image = p.images[0];
     }
-    
-    // 摘要
-    if (!out.excerpt) {
-      var src = out.content_en || out.content || '';
-      out.excerpt = src.replace(/<[^>]+>/g, '').substring(0, 200);
-    }
-    
     return out;
   }
 
-  // ── 工具 ─────────────────────────────────────
-  function qs(sel, ctx) { return (ctx || document).querySelector(sel); }
+  // Helpers
+  function getLang() {
+    try { return localStorage.getItem('jinyu_lang') || 'en'; } catch(e) { return 'en'; }
+  }
+
+  function escHtml(s) {
+    return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
   function fmtDate(str, full) {
     if (!str) return '';
     var d = new Date(str);
     if (isNaN(d)) return str;
     var lang = (window.i18n && window.i18n.currentLang) ? window.i18n.currentLang : 'en';
     if (lang === 'zh') {
-      if (full) {
-        return d.getFullYear() + '年' + (d.getMonth() + 1) + '月' + d.getDate() + '日';
-      }
-      return d.getFullYear() + '年' + (d.getMonth() + 1) + '月';
+      return full
+        ? d.getFullYear() + '年' + (d.getMonth() + 1) + '月' + d.getDate() + '日'
+        : d.getFullYear() + '年' + (d.getMonth() + 1) + '月';
     }
     return full
       ? d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
       : d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
   }
 
-  // 分类名称翻译
-  var CAT_I18N_MAP = {
-    'Industry Knowledge':  'blog_page.industryKnowledge',
-    'Material Guide':      'blog_page.materialGuide',
-    'Printing Technology': 'blog_page.printingTechnology'
-  };
-  function translateCat(cat) {
-    if (!cat) return '';
-    var key = CAT_I18N_MAP[cat];
-    if (key && window.i18n && window.i18n.t) {
-      var v = window.i18n.t(key);
-      return (v && v !== key) ? v : cat;
-    }
-    return cat;
-  }
-  function imgSrc(src) {
-    if (!src) return '';
-    // base64 图片直接返回
-    if (/^data:image\//.test(src)) return src;
-    // http(s) URL 直接返回
-    return /^https?:\/\//.test(src) ? src : 'http://localhost:3011/' + src;
-  }
-  function getParam(key) {
-    return new URLSearchParams(window.location.search).get(key);
-  }
-  function readingTime(html) {
-    var text = html.replace(/<[^>]+>/g, '');
-    var words = text.trim().split(/\s+/).length;
+  function readingTime(text) {
+    var words = text.replace(/<[^>]+>/g, '').trim().split(/\s+/).length;
     var mins = Math.max(1, Math.round(words / 200));
     var lang = (window.i18n && window.i18n.currentLang) ? window.i18n.currentLang : 'en';
-    if (lang === 'zh') return mins + ' 分钟阅读';
-    return mins + ' min read';
+    return lang === 'zh' ? mins + ' 分钟阅读' : mins + ' min read';
   }
 
-  // ── 阅读进度条 ────────────────────────────────
-  window.addEventListener('scroll', function() {
-    var bar = document.getElementById('progressBar');
-    var fab = document.getElementById('fabTop');
-    var el = document.getElementById('bdMain');
-    if (!el) return;
-    var scrollTop = window.scrollY || window.pageYOffset;
-    var total = (el.scrollHeight + el.offsetTop) - window.innerHeight;
-    if (bar) bar.style.width = (total > 0 ? Math.min(100, scrollTop / total * 100) : 0) + '%';
-    if (fab) fab.style.opacity = scrollTop > 300 ? '1' : '0';
+  function imgSrc(src) {
+    if (!src) return '';
+    if (/^data:image\//.test(src)) return src;
+    return /^https?:\/\//.test(src) ? src : 'http://localhost:3011/' + src;
+  }
+
+  // Lightbox
+  var _lightboxSrc = '';
+  window.openLightbox = function(src) {
+    var src = src || _lightboxSrc;
+    if (!src) return;
+    document.getElementById('lightboxImg').src = src;
+    document.getElementById('lightboxOverlay').classList.add('show');
+    document.body.style.overflow = 'hidden';
+  };
+  window.closeLightbox = function() {
+    document.getElementById('lightboxOverlay').classList.remove('show');
+    document.body.style.overflow = '';
+  };
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeLightbox();
   });
 
-  // ── 目录折叠 ─────────────────────────────────
-  window.toggleToc = function() {
-    var list = document.getElementById('bdTocList');
-    var btn  = document.getElementById('tocToggleText');
-    var hidden = list.style.display === 'none';
-    list.style.display = hidden ? '' : 'none';
-    var t = window.i18n && window.i18n.t;
-    btn.textContent = hidden
-      ? (t ? t('blog_page.detail.tocHide') : 'Hide')
-      : (t ? t('blog_page.detail.tocShow') : 'Show');
-  };
-
-  // ── 分享功能 ──────────────────────────────────
-  window.copyLink = function() {
-    navigator.clipboard.writeText(window.location.href).then(function() {
-      var btn = qs('.bd-share-copy');
-      if (btn) { btn.textContent = '✓ Copied!'; setTimeout(function() { btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy Link'; }, 2000); }
-    });
-  };
-
-  // ── FAQ 展开/收起 ──────────────────────────────
+  // FAQ bind
   function bindFaq() {
-    document.querySelectorAll('.bd-faq-item').forEach(function(item) {
-      item.querySelector('.bd-faq-q').addEventListener('click', function() {
+    document.querySelectorAll('.news-faq-item').forEach(function(item) {
+      item.querySelector('.news-faq-q').addEventListener('click', function() {
         var isOpen = item.classList.contains('open');
-        document.querySelectorAll('.bd-faq-item.open').forEach(function(o) { o.classList.remove('open'); });
+        document.querySelectorAll('.news-faq-item.open').forEach(function(o) { o.classList.remove('open'); });
         if (!isOpen) item.classList.add('open');
       });
     });
   }
 
-  // ── 自动生成目录 ──────────────────────────────
-  function buildToc(contentEl) {
-    var headers = contentEl.querySelectorAll('h2, h3');
-    if (headers.length < 2) return;
-    var ul = document.getElementById('bdTocList');
-    ul.innerHTML = '';
-    var idx = 0;
-    headers.forEach(function(h) {
-      idx++;
-      var id = h.id || ('bd-sec-' + idx);
-      h.id = id;
-      var li = document.createElement('li');
-      var a = document.createElement('a');
-      a.href = '#' + id;
-      a.textContent = h.textContent;
-      if (h.tagName === 'H3') a.className = 'h3-item';
-      a.addEventListener('click', function(e) {
-        e.preventDefault();
-        var target = document.getElementById(id);
-        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      });
-      li.appendChild(a);
-      ul.appendChild(li);
-    });
-    document.getElementById('bdToc').style.display = '';
+  // Markdown to HTML
+  function mdToHtml(text) {
+    if (!text) return '';
+    text = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    text = text.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+    text = text.replace(/^# (.+)$/gm, '<h2>$1</h2>');
+    text = text.replace(/^- (.+)$/gm, '<li>$1</li>');
+    text = text.replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>');
+    text = text.split('\n\n').map(function(p) {
+      if (p.match(/^<(h2|ul|ol)/)) return p;
+      return '<p>' + p.replace(/\n/g, '<br>') + '</p>';
+    }).join('');
+    return text;
   }
 
-  // 注：当文章无 FAQ 时，不显示 FAQ 区域（由后台新闻管理编辑后生效）
-
-  // ── 多语言字段选择工具 ────────────────────────
-  // 同步版：只查字段，不翻译
-  function getLangField(post, baseKey, lang) {
-    // 字段映射：baseKey -> { zh, en, vi, tl }
-    var suffixMap = { zh: '_zh', en: '', vi: '_vi', tl: '_tl' };
-    var suffix = suffixMap[lang] !== undefined ? suffixMap[lang] : '';
+  // getField — sync
+  function getField(item, baseKey, lang) {
+    var map = { zh: '_zh', vi: '_vi', tl: '_tl' };
+    var suffix = map[lang] !== undefined ? map[lang] : '';
     var key = suffix ? baseKey + suffix : baseKey;
-    var val = post[key];
-    // fallback 链：目标语言 → 英文 → 中文
-    if (!val || val === '<p><br></p>') val = post[baseKey] || '';
-    if (!val || val === '<p><br></p>') val = post[baseKey + '_zh'] || '';
-    return val || '';
+    var v = item[key] || '';
+    if (!v || v === '<p><br></p>') v = item[baseKey] || '';
+    if (!v || v === '<p><br></p>') v = item[baseKey + '_zh'] || '';
+    return v || '';
   }
 
-  // 异步版：字段为空时用 apiTranslate（支持 zh/vi/tl）
-  async function getLangFieldAsync(post, baseKey, lang) {
-    var v = getLangField(post, baseKey, lang);
-    if (v) return v;
-    if (lang !== 'en') {
-      var zhSrc = post[baseKey + '_zh'] || '';
-      var enSrc = post[baseKey] || post[baseKey + '_en'] || '';
-      var src = zhSrc || enSrc;
-      if (src && String(src).trim()) {
-        var fromLang = zhSrc ? 'zh' : 'en';
-        try { return await apiTranslate(String(src).trim(), fromLang, lang); } catch(e) {}
-      }
-    }
-    return v;
-  }
-
-  // 当前文章数据（用于语言切换时重新渲染）
-  var _currentPost = null;
-
-  // ── 渲染文章 ─────────────────────────────────
-  function renderArticle(post) {
-    _currentPost = post; // 保存以便语言切换时重渲
-    
-    // 立即隐藏loading，显示内容
-    var loading = document.getElementById('bdLoading');
-    if (loading) loading.style.display = 'none';
-
-    // 等待 i18n 初始化完成，确保 currentLang 正确
-    function doRender() {
-    var lang = (window.i18n && window.i18n.currentLang) ? window.i18n.currentLang : 'en';
-
-    // 多语言字段映射
-    var _sfxMap = { zh: '_zh', en: '', vi: '_vi', tl: '_tl' };
-    var _sfx = _sfxMap[lang] !== undefined ? _sfxMap[lang] : '';
-    
-    // 获取各语言版本字段（来自 normalizePost 转换后的扁平结构）
-    var titleCms    = _sfx ? (post['title' + _sfx] || '') : (post.title || '');
-    var contentCms  = _sfx ? (post['content' + _sfx] || '') : (post.content || '');
-    var seoTitleCms = _sfx ? (post['seoTitle' + _sfx] || '') : (post.seoTitle_en || post.seoTitle || '');
-    var altCms      = _sfx ? (post['alt' + _sfx] || '') : (post.alt_en || '');
-    
-    // 英文默认值
-    var enTitle    = post.title_en    || post.title    || '';
-    var enContent  = post.content_en  || post.content  || '';
-    var enSeoTitle = post.seoTitle_en || post.seoTitle || enTitle;
-    var enAlt      = post.alt_en      || enTitle;
-
-    // 当前语言的实际值
-    var title    = titleCms   || enTitle;
-    var content  = contentCms || enContent;
-    var seoTitle = seoTitleCms || enSeoTitle || title;
-    var alt      = altCms      || enAlt      || title;
-
-    // vi/tl/zh 且无专属字段时，异步翻译标题（不阻塞渲染）
-    if (lang !== 'en' && !titleCms && enTitle) {
-      apiTranslate(enTitle, 'en', lang).then(function(t) {
-        if (t) {
-          document.getElementById('heroTitle').textContent = t;
-          document.getElementById('heroTitleCrumb').textContent = t;
-          // 更新页面标题
-          document.title = t + ' | Jin Yu Advertising Material';
+  // pickField — 与产品页 pickField 完全一致的翻译逻辑
+  async function pickField(obj, base, lang) {
+    if (!obj || !base || !lang) return '';
+    // 先直接读对应语言字段
+    var directVal = '';
+    if (lang === 'tl') {
+      var tlSuffixes = ['_tl', '_fil', '_ph'];
+      for (var s = 0; s < tlSuffixes.length; s++) {
+        if (obj[base + tlSuffixes[s]] && obj[base + tlSuffixes[s]].trim()) {
+          directVal = obj[base + tlSuffixes[s]]; break;
         }
-      });
-    }
-
-    // 页面 meta（动态 SEO，使用 seoTitle）
-    initSEO({
-      pageTitle:   seoTitle || title || 'Article',
-      description: title || '',
-      ogImage:     imgSrc(post.cover_image) || ''
-    });
-
-    // Hero
-    var rawCat = post.category || '';
-    document.getElementById('heroCatCrumb').textContent = translateCat(rawCat) || 'Blog';
-    document.getElementById('heroCatCrumb').setAttribute('data-raw-cat', rawCat);
-    document.getElementById('heroTitleCrumb').textContent = title;
-    document.getElementById('heroCatBadge').textContent = translateCat(rawCat) || '';
-    document.getElementById('heroCatBadge').setAttribute('data-raw-cat', rawCat);
-    var pubRaw = post.published_at || post.created_at || '';
-    var pubEl = document.getElementById('heroPublished');
-    pubEl.textContent = fmtDate(pubRaw, true);
-    pubEl.setAttribute('data-raw', pubRaw);
-    var rawAuthor = post.author || 'JinYu Team';
-    var authorEl = document.getElementById('heroAuthor');
-    authorEl.textContent = (window.i18n && window.i18n.t ? window.i18n.t('blog_page.detail.byAuthor') : 'By') + ' ' + rawAuthor;
-    authorEl.setAttribute('data-raw-author', rawAuthor);
-
-    var rtEl = document.getElementById('heroReadTimeText');
-    rtEl.textContent = readingTime(content);
-    rtEl.setAttribute('data-raw-post-id', post.id || post.slug || '');
-
-    // 获取新闻浏览量（非阻塞）
-    var postSlug = post.slug || post.id || '';
-    var viewsEl = document.getElementById('heroViews');
-    var viewsWrap = document.getElementById('heroViewsWrap');
-    if (postSlug && viewsEl && viewsWrap) {
-      fetch('/api/news-views/' + encodeURIComponent(postSlug))
-        .then(function(r) { return r.json(); })
-        .then(function(viewsData) {
-          if (viewsData.success && viewsData.views > 0) {
-            viewsEl.textContent = viewsData.views;
-            viewsWrap.style.display = '';
-          }
-        })
-        .catch(function(e) { /* 静默失败 */ });
-    }
-
-    if (post.updated_at && post.updated_at !== post.published_at) {
-      var updEl = document.getElementById('heroUpdated');
-      updEl.textContent = fmtDate(post.updated_at, true);
-      updEl.setAttribute('data-raw', post.updated_at);
-      document.getElementById('heroUpdatedWrap').style.display = '';
-    }
-
-    document.getElementById('heroTitle').textContent = title;
-
-    // 标签（Hero + 底部，支持翻译，非阻塞）
-    renderTags(post, lang);
-
-    document.getElementById('bdHero').style.display = '';
-
-    // 封面图（使用 alt 文案）
-    var cover = imgSrc(post.cover_image);
-    if (cover) {
-      var img = document.getElementById('heroCoverImg');
-      img.src = cover;
-      img.alt = alt;  // 使用独立图片Alt文案
-      img.onerror = function() { document.getElementById('heroCoverWrap').style.display = 'none'; };
-      document.getElementById('heroCoverWrap').style.display = '';
-    }
-
-    // 正文（多语言，非阻塞）
-    renderContent(post, lang);
-
-    // 目录（正文渲染后立即构建）
-    buildToc(document.getElementById('bdContent'));
-
-    // FAQ（多语言）
-    renderFaq(post, lang);
-
-    // Final Thoughts（多语言，非阻塞）
-    renderFinalThoughts(post, lang);
-
-    // 分享链接
-    var shareUrl   = encodeURIComponent(window.location.href);
-    var shareTitle = encodeURIComponent(title || 'Jin Yu Blog');
-    document.getElementById('shareLinkedIn').href = 'https://www.linkedin.com/shareArticle?mini=true&url=' + shareUrl + '&title=' + shareTitle;
-    document.getElementById('shareTwitter').href  = 'https://twitter.com/intent/tweet?url=' + shareUrl + '&text=' + shareTitle;
-
-    // 显示主体
-    document.getElementById('bdMain').style.display = '';
-
-    // i18n
-    if (window.applyI18n) window.applyI18n();
-    } // end doRender
-
-    // 确保 i18n 初始化后再渲染
-    if (window.i18n && window.i18n._initialized) {
-      doRender();
-    } else {
-      // 等待 i18n 初始化完成
-      var checkCount = 0;
-      var checkInterval = setInterval(function() {
-        checkCount++;
-        if (window.i18n && window.i18n._initialized) {
-          clearInterval(checkInterval);
-          doRender();
-        } else if (checkCount > 100) {
-          // 超时后使用默认值
-          clearInterval(checkInterval);
-          console.warn('[news-detail] i18n init timeout, using default language');
-          doRender();
-        }
-      }, 50);
-    }
-  }
-
-  // ── 标签渲染（支持多语言翻译）────────────────
-  // Hero 顶部彩色标签 + 文章底部标签芯片，语言非英文时异步翻译
-  var _tagsCache = {};  // { lang: [translatedTag, ...] }
-
-  function renderTags(post, lang) {
-    if (!Array.isArray(post.tags) || !post.tags.length) return;
-
-    var heroTagsEl = document.getElementById('heroTags');
-    var tagsRowEl  = document.getElementById('bdTagsRow');
-
-    // 获取翻译后的标签列表（带缓存）
-    var cacheKey = (post.id || post.slug || 'post') + '__tags__' + lang;
-    var translated;
-
-    if (_tagsCache[cacheKey]) {
-      translated = _tagsCache[cacheKey];
-      updateTagDisplay(translated);
-    } else if (lang === 'en') {
-      translated = post.tags;
-      _tagsCache[cacheKey] = translated;
-      updateTagDisplay(translated);
-    } else {
-      // 先显示原文，再后台翻译
-      translated = post.tags;
-      updateTagDisplay(translated);
-      // 后台翻译
-      Promise.all(post.tags.map(function(tag) {
-        return apiTranslate(tag, 'en', lang).catch(function() { return tag; });
-      })).then(function(result) {
-        _tagsCache[cacheKey] = result;
-        updateTagDisplay(result);
-      });
-    }
-
-    function updateTagDisplay(tags) {
-      // Hero 标签
-      if (heroTagsEl) {
-        heroTagsEl.innerHTML = tags.map(function(t) {
-          return '<span class="bd-tag">' + t + '</span>';
-        }).join('');
       }
-      // 底部标签芯片
-      if (tagsRowEl) {
-        tagsRowEl.querySelectorAll('.bd-tag-chip').forEach(function(el) { el.remove(); });
-        tags.forEach(function(t) {
-          var a = document.createElement('a');
-          a.className = 'bd-tag-chip';
-          a.textContent = t;
-          a.href = 'news.html';
-          tagsRowEl.appendChild(a);
-        });
+    } else {
+      var v = obj[base + '_' + lang];
+      if (v && (typeof v === 'string' ? v.trim() : (Array.isArray(v) ? v.length > 0 : true))) {
+        directVal = v;
       }
     }
-  }
+    if (directVal) return directVal;
 
-  // ── Final Thoughts（多语言）──────────────────
-  // 字段优先级：post.final_thoughts_zh/vi/tl → post.final_thoughts（英文）→ 默认英文兜底
-  // vi/tl 无专属字段时异步翻译英文源
-  var _DEFAULT_FINAL_EN = 'Choosing the right advertising material is not just about upfront cost — it\'s about total project value: durability, print quality, ease of installation, and the long-term impression your signage makes. We hope this guide helps you make a more informed sourcing decision. If you have questions about specific applications or need a custom recommendation, our technical team is ready to help.';
-
-  function renderFinalThoughts(post, lang) {
-    var el = document.getElementById('bdFinalText');
-    var sec = document.getElementById('bdFinal');
-    var sfxMap = { zh: '_zh', en: '', vi: '_vi', tl: '_tl' };
-    var sfx = sfxMap[lang] !== undefined ? sfxMap[lang] : '';
-
-    // 尝试后台多语言字段
-    var cmsVal = sfx ? (post['final_thoughts' + sfx] || '') : (post.final_thoughts || '');
-    var enVal  = post.final_thoughts || _DEFAULT_FINAL_EN;
-
+    // 字段为空时：en 直接回退到 zh/通用字段；zh/vi/tl 尝试翻译
     if (lang === 'en') {
-      el.textContent = enVal;
-      sec.style.display = '';
-      return;
+      return obj[base + '_zh'] || obj[base] || '';
     }
-    if (lang === 'zh') {
-      var zhVal = post.final_thoughts_zh || '';
-      el.textContent = zhVal || enVal;
-      sec.style.display = '';
-      return;
-    }
-    // vi / tl
-    if (cmsVal) {
-      el.textContent = cmsVal;
-      sec.style.display = '';
-      return;
-    }
-    // 先显示英文，再异步翻译
-    el.textContent = enVal;
-    sec.style.display = '';
-    apiTranslate(enVal, 'en', lang).then(function(t) {
-      if (t && t !== enVal) el.textContent = t;
-    });
-  }
 
-  // ── 正文翻译缓存（避免重复调 API）────────────
-  // 结构：{ [postId_lang]: htmlString }
-  var _contentCache = {};
-
-  // ── 从 DOM 提取所有非空文本节点，批量翻译后回写 ──
-  // 不修改任何 HTML 标签结构，只替换文字
-  // 全部走 apiTranslate（本地 /api/translate 代理）
-  async function translateDomText(rootEl, fromLang, toLang) {
-    if (fromLang === toLang) return;
-
-    // 收集所有非空叶子文本节点（跳过 script/style/code/pre）
-    var textNodes = [];
-    var walker = document.createTreeWalker(
-      rootEl,
-      NodeFilter.SHOW_TEXT,
-      {
-        acceptNode: function(node) {
-          var skip = ['SCRIPT','STYLE','CODE','PRE','NOSCRIPT'];
-          var parent = node.parentElement;
-          while (parent) {
-            if (skip.indexOf(parent.tagName) !== -1) return NodeFilter.FILTER_REJECT;
-            parent = parent.parentElement;
-          }
-          return node.textContent.trim() ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
-        }
-      },
-      false
-    );
-    var node;
-    while ((node = walker.nextNode())) {
-      textNodes.push(node);
-    }
-    if (!textNodes.length) return;
-
-    // 分批翻译（每批 10 个节点，避免请求过多）
-    var BATCH = 10;
-    for (var i = 0; i < textNodes.length; i += BATCH) {
-      var batch = textNodes.slice(i, i + BATCH);
-      await Promise.all(batch.map(async function(tNode) {
-        var raw = tNode.textContent.trim();
-        if (!raw) return;
+    // zh/vi/tl：字段为空，找英文源文本自动翻译
+    if (window.autoTranslate) {
+      var srcText = obj[base + '_en'] || obj[base + '_zh'] || obj[base] || '';
+      if (typeof srcText === 'string' && srcText.trim()) {
+        var fromLang = obj[base + '_en'] ? 'en' : 'zh';
         try {
-          var translated = await apiTranslate(raw, fromLang, toLang);
-          if (translated && translated !== raw) {
-            tNode.textContent = tNode.textContent.replace(raw, translated);
-          }
-        } catch(e) { /* 失败静默，保留原文 */ }
-      }));
+          return await window.autoTranslate.translate(srcText.trim(), fromLang, lang);
+        } catch(e) {}
+      }
     }
+    // 最终 fallback
+    return obj[base + '_en'] || obj[base + '_zh'] || obj[base] || '';
   }
 
-  // ── 渲染正文（按语言，支持 autoTranslate）─────
-  async function renderContent(post, lang) {
-    var contentEl = document.getElementById('bdContent');
-
-    // 字段映射
-    var suffixMap = { zh: '_zh', en: '', vi: '_vi', tl: '_tl' };
-    var suf = suffixMap[lang] !== undefined ? suffixMap[lang] : '';
-    var cmsKey = 'content' + suf;
-    var cmsVal = (post[cmsKey] || '').trim();
-    var hasTrueCmsLang = !!cmsVal && cmsVal !== '<p><br></p>';
-
-    // 英文正文（默认）
-    var enHtml = (post.content_en || post.content || '').trim();
-
-    if (!enHtml || enHtml === '<p><br></p>') {
-      contentEl.innerHTML = '<p style="color:#9ca3af;font-style:italic;">Article content is being prepared. Please check back soon.</p>';
-      return;
-    }
-
-    // 有后台专属字段 → 直接用
-    if (hasTrueCmsLang) {
-      contentEl.innerHTML = cmsVal;
-      return;
-    }
-
-    // en → 直接显示英文原文
-    if (lang === 'en') {
-      contentEl.innerHTML = enHtml;
-      return;
-    }
-
-    // zh / vi / tl → 先显示英文，再异步翻译 DOM 节点
-    contentEl.innerHTML = enHtml;
-
-    // 检查缓存
-    var cacheKey = (post.id || post.slug || 'post') + '__' + lang;
-    if (_contentCache[cacheKey]) {
-      contentEl.innerHTML = _contentCache[cacheKey];
-      buildToc(contentEl);
-      return;
-    }
-
-    // 顶部加翻译中提示条
-    var transBar = document.createElement('div');
-    transBar.id = 'bdTransBar';
-    transBar.style.cssText = 'background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8;font-size:13px;padding:8px 14px;border-radius:6px;margin-bottom:16px;display:flex;align-items:center;gap:8px;';
-    var transLabel = (window.i18n && window.i18n.t) ? window.i18n.t('blog_page.detail.translating') : 'Translating content…';
-    transBar.innerHTML = '<svg style="animation:spin 1s linear infinite;flex-shrink:0;" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-9-9"/></svg>'
-      + '<span>' + transLabel + '</span>';
-    contentEl.insertBefore(transBar, contentEl.firstChild);
-
-    // 非阻塞翻译：在后台翻译，不阻塞页面显示
-    translateDomText(contentEl, 'en', lang).then(function() {
-      // 移除提示条
-      var bar = document.getElementById('bdTransBar');
-      if (bar) bar.remove();
-      // 缓存翻译结果
-      _contentCache[cacheKey] = contentEl.innerHTML;
-      // 翻译完成后重建目录（标题文字已翻译）
-      buildToc(contentEl);
-    }).catch(function() {
-      // 翻译失败，移除提示条，显示原文
-      var bar = document.getElementById('bdTransBar');
-      if (bar) bar.remove();
-    });
+  // 兼容别名
+  async function getFieldAuto(item, baseKey, lang) {
+    return await pickField(item, baseKey, lang);
   }
 
-  // ── 渲染 FAQ（按语言）────────────────────────
-  // 只有文章自身有 FAQ 时才显示，无 FAQ 则隐藏区域（可在后台新闻管理中添加）
-  function renderFaq(post, lang) {
-    var hasFaq = Array.isArray(post.faq) && post.faq.length > 0;
-    if (!hasFaq) {
-      // 无 FAQ 数据时隐藏 FAQ 区域
-      document.getElementById('bdFaq').style.display = 'none';
-      return;
+  // ── Render Article ──────────────────────────────────────────
+  async function renderArticle(post, allPosts, lang) {
+    var title = await getFieldAuto(post, 'title', lang);
+    var content = await getFieldAuto(post, 'content', lang);
+
+    // Update title
+    document.getElementById('newsTitle').textContent = title;
+    document.getElementById('breadcrumbTitle').textContent = title;
+    document.title = title + ' – Jin Yu Advertising Materials';
+
+    // Cover image
+    var cover = imgSrc(post.cover_image);
+    var coverImg = document.getElementById('coverImg');
+    var coverEmpty = document.getElementById('coverEmpty');
+    if (cover) {
+      coverImg.src = cover;
+      coverImg.alt = title;
+      coverImg.style.display = 'block';
+      coverEmpty.style.display = 'none';
+      _lightboxSrc = cover;
+    } else {
+      coverImg.style.display = 'none';
+      coverEmpty.style.display = 'flex';
     }
-    var faqs = post.faq;
-    var faqHtml = faqs.map(function(item, i) {
-      // 多语言 FAQ：q_zh/q_en/q_vi/q_tl，兼容旧格式 q/a
-      var qMap = { zh: item.q_zh, en: item.q_en, vi: item.q_vi, tl: item.q_tl };
-      var aMap = { zh: item.a_zh, en: item.a_en, vi: item.a_vi, tl: item.a_tl };
-      var q = qMap[lang] || item.q_en || item.q_zh || item.q || '';
-      var a = aMap[lang] || item.a_en || item.a_zh || item.a || '';
-      if (!q && !a) return '';
-      return '<div class="bd-faq-item' + (i === 0 ? ' open' : '') + '">'
-        + '<div class="bd-faq-q">'
-        + '<span>' + q + '</span>'
-        + '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>'
-        + '</div>'
-        + '<div class="bd-faq-a">' + a + '</div>'
-        + '</div>';
-    }).filter(Boolean).join('');
-    if (faqHtml) {
-      document.getElementById('bdFaqItems').innerHTML = faqHtml;
-      document.getElementById('bdFaq').style.display = '';
+
+    // Meta info
+    var rawCat = post.category || '';
+    var date = post.published_at || post.created_at || '';
+    var rawAuthor = post.author || 'JinYu Team';
+
+    // Translate category
+    var CAT_I18N_MAP = {
+      'Industry Knowledge':  'blog_page.industryKnowledge',
+      'Material Guide':      'blog_page.materialGuide',
+      'Printing Technology': 'blog_page.printingTechnology'
+    };
+    var catKey = CAT_I18N_MAP[rawCat];
+    var dispCat = (catKey && window.i18n && window.i18n.t) ? window.i18n.t(catKey) : rawCat;
+    if (dispCat === rawCat && lang !== 'en') {
+      dispCat = await apiTranslate(rawCat, 'en', lang);
+    }
+
+    var metaHtml = '';
+    if (dispCat) metaHtml += '<span class="news-meta-chip">🏷 <strong>' + escHtml(dispCat) + '</strong></span>';
+    if (date) metaHtml += '<span class="news-meta-chip">📅 <strong>' + escHtml(fmtDate(date, true)) + '</strong></span>';
+    if (rawAuthor) metaHtml += '<span class="news-meta-chip">👤 <strong>' + escHtml(rawAuthor) + '</strong></span>';
+    metaHtml += '<span class="news-meta-chip">⏱ <strong>' + readingTime(content) + '</strong></span>';
+    document.getElementById('newsMeta').innerHTML = metaHtml;
+
+    // Body
+    document.getElementById('newsBody').innerHTML = mdToHtml(content);
+
+    // Tags
+    var tagsSection = document.getElementById('tagsSection');
+    var tagsList = document.getElementById('tagsList');
+    if (Array.isArray(post.tags) && post.tags.length) {
+      tagsSection.style.display = 'block';
+      var translatedTags = post.tags;
+      if (lang !== 'en') {
+        translatedTags = await Promise.all(post.tags.map(function(t) {
+          return apiTranslate(t, 'en', lang).catch(function() { return t; });
+        }));
+      }
+      tagsList.innerHTML = translatedTags.map(function(t) {
+        return '<span class="news-tag">' + escHtml(t) + '</span>';
+      }).join('');
+    } else {
+      tagsSection.style.display = 'none';
+    }
+
+    // Key Takeaways (from summary/extract field)
+    var takeawaysSection = document.getElementById('takeawaysSection');
+    var takeawaysList = document.getElementById('takeawaysList');
+    var excerpt = getField(post, 'excerpt', lang);
+    if (excerpt) {
+      var lines = excerpt.split(/[.。]/).filter(function(l) { return l.trim().length > 10; }).slice(0, 4);
+      if (lines.length) {
+        takeawaysSection.style.display = 'block';
+        var translatedLines = lines;
+        if (lang !== 'en') {
+          translatedLines = await Promise.all(lines.map(function(l) {
+            return apiTranslate(l.trim(), 'en', lang).catch(function() { return l; });
+          }));
+        }
+        takeawaysList.innerHTML = translatedLines.map(function(l) {
+          return '<div class="news-takeaway-item">' + escHtml(l.replace(/^[-•]\s*/, '').trim()) + '</div>';
+        }).join('');
+      } else {
+        takeawaysSection.style.display = 'none';
+      }
+    } else {
+      takeawaysSection.style.display = 'none';
+    }
+
+    // FAQ
+    var faqSection = document.getElementById('faqSection');
+    if (Array.isArray(post.faq) && post.faq.length) {
+      faqSection.style.display = 'block';
+      var faqHtml = post.faq.map(function(item, i) {
+        var qMap = { zh: item.q_zh, en: item.q_en, vi: item.q_vi, tl: item.q_tl };
+        var aMap = { zh: item.a_zh, en: item.a_en, vi: item.a_vi, tl: item.a_tl };
+        var q = qMap[lang] || item.q_en || item.q_zh || item.q || '';
+        var a = aMap[lang] || item.a_en || item.a_zh || item.a || '';
+        return '<div class="news-faq-item' + (i === 0 ? ' open' : '') + '">'
+          + '<div class="news-faq-q">'
+          + '<span>' + escHtml(q) + '</span>'
+          + '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>'
+          + '</div>'
+          + '<div class="news-faq-a">' + a + '</div>'
+          + '</div>';
+      }).join('');
+      document.getElementById('faqItems').innerHTML = faqHtml;
       bindFaq();
     } else {
-      document.getElementById('bdFaq').style.display = 'none';
+      faqSection.style.display = 'none';
+    }
+
+    // Related Articles
+    var related = (allPosts || []).filter(function(p) {
+      return (p.slug || p.id) !== (post.slug || post.id);
+    }).slice(0, 4);
+
+    if (related.length) {
+      var relatedHtml = await Promise.all(related.map(async function(p) {
+        var rTitle = await getFieldAuto(p, 'title', lang);
+        var rDate = p.published_at || p.created_at || '';
+        var rImg = imgSrc(p.cover_image);
+        var thumb = rImg
+          ? '<div class="related-thumb"><img src="' + escHtml(rImg) + '" alt="" onerror="this.style.opacity=0" /></div>'
+          : '<div class="related-thumb">📰</div>';
+        return '<a class="related-item" href="news-detail.html?slug=' + encodeURIComponent(p.slug || p.id) + '">'
+          + thumb
+          + '<div class="related-info">'
+          + '<div class="related-item-title">' + escHtml(rTitle) + '</div>'
+          + '<div class="related-item-date">' + escHtml(fmtDate(rDate)) + '</div>'
+          + '</div></a>';
+      }));
+      document.getElementById('relatedList').innerHTML = relatedHtml.join('');
+    } else {
+      document.getElementById('relatedList').innerHTML = '<p style="color:var(--gray-500);font-size:13px;">No related articles found.</p>';
+    }
+
+    // Show content
+    document.getElementById('loadingContainer').style.display = 'none';
+    document.getElementById('newsDetailContent').style.display = 'grid';
+
+    // i18n
+    if (window.i18n && window.i18n.applyTranslations) {
+      window.i18n.applyTranslations();
     }
   }
 
-  // ── 加载相关文章（侧边栏 + 底部推荐）─────────
-  async function loadRelated(current) {
-    try {
-      var r = await fetch('/api/blog');
-      var json = await r.json();
-      var all = (json.data || []).map(normalizePost).filter(function(p) {
-        return (p.slug || p.id) !== (current.slug || current.id);
-      });
+  // ── Language switch ─────────────────────────────────────────
+  var _cachedPosts = null;
+  var _currentPost = null;
 
-      // 同类优先，最多取6篇
-      var sameCat = all.filter(function(p) { return p.category === current.category; });
-      var others  = all.filter(function(p) { return p.category !== current.category; });
-      var pool = sameCat.concat(others).slice(0, 6);
+  function installLangInterceptor() {
+    if (!window.i18n || !window.i18n.changeLanguage || window._newsDetailInterceptorInstalled) return;
+    window._newsDetailInterceptorInstalled = true;
 
-      // 侧边栏：最多3篇
-      var sideEl = document.getElementById('bdSideRelated');
-      var side = pool.slice(0, 3);
-      if (side.length === 0) {
-        sideEl.innerHTML = '<p style="color:#9ca3af;font-size:13px;">' + (window.i18n && window.i18n.t ? window.i18n.t('blog_page.detail.noRelated') : 'No related articles.') + '</p>';
-      } else {
-        var sideLang = (window.i18n && window.i18n.currentLang) ? window.i18n.currentLang : 'en';
-        sideEl.innerHTML = side.map(function(p) {
-          var pTitle = getLangField(p, 'title', sideLang) || p.title || '';
-          var src = imgSrc(p.cover_image);
-          var thumb = src
-            ? '<img src="' + src + '" alt="' + (pTitle||'') + '" class="bd-related-thumb" onerror="this.style.display=\'none\'" />'
-            : '<div class="bd-related-thumb-placeholder">📝</div>';
-          return '<a class="bd-related-item" href="news-detail.html?slug=' + encodeURIComponent(p.slug || p.id) + '">'
-            + thumb
-            + '<div class="bd-related-info"><h5>' + (pTitle||'') + '</h5>'
-            + '<span class="rdate" data-raw="' + (p.published_at || p.created_at || '') + '">' + fmtDate(p.published_at || p.created_at) + '</span></div></a>';
-        }).join('');
+    var original = window.i18n.changeLanguage.bind(window.i18n);
+    window.i18n.changeLanguage = async function(lang) {
+      await original(lang);
+      if (_currentPost && _cachedPosts) {
+        renderArticle(_currentPost, _cachedPosts, lang);
       }
-
-      // 底部更多：最多3篇
-      var more = pool.slice(0, 3);
-      if (more.length > 0) {
-        var moreLang = (window.i18n && window.i18n.currentLang) ? window.i18n.currentLang : 'en';
-        document.getElementById('bdMoreGrid').innerHTML = more.map(function(p) {
-          var pTitle   = getLangField(p, 'title',   moreLang) || p.title   || '';
-          var pExcerpt = getLangField(p, 'excerpt', moreLang) || p.excerpt || '';
-          var src = imgSrc(p.cover_image);
-          var imgHtml = src
-            ? '<img src="' + src + '" alt="' + (pTitle||'') + '" class="bd-more-card-img" onerror="this.parentElement.classList.add(\'bd-more-card-img-placeholder\');this.style.display=\'none\'" />'
-            : '<div class="bd-more-card-img-placeholder">📝</div>';
-          return '<a class="bd-more-card" href="news-detail.html?slug=' + encodeURIComponent(p.slug || p.id) + '">'
-            + imgHtml
-            + '<div class="bd-more-card-body">'
-            + '<div class="cat">' + (p.category||'') + '</div>'
-            + '<h3>' + (pTitle||'') + '</h3>'
-            + '<p>' + (pExcerpt||'') + '</p>'
-            + '<span class="read-more">' + (window.i18n && window.i18n.t ? window.i18n.t('blog_page.detail.readArticle') : 'Read Article') + ' &rsaquo;</span>'
-            + '</div></a>';
-        }).join('');
-        document.getElementById('bdMore').style.display = '';
-      }
-    } catch(e) {
-      document.getElementById('bdSideRelated').innerHTML = '';
-    }
+    };
   }
 
-  // ── 将后台 langData 嵌套结构转为前台扁平字段 ──
-  // 后台字段：seoTitle, title, slug, alt, content
-  // 前台字段：meta_title_*, title_*, slug, alt_*, content_*
-  function normalizePost(p) {
-    // 如果已经是扁平格式（已有 meta_title 或 slug），直接返回
-    if (p.meta_title_en || p.slug) return p;
-    
-    var out = Object.assign({}, p);
-    var ld = p.langData;
-    
-    if (ld) {
-      // 英文版本
-      if (ld.en) {
-        out.title_en     = ld.en.title     || '';
-        out.content_en   = ld.en.content   || '';
-        out.seoTitle_en  = ld.en.seoTitle  || ld.en.title || '';
-        out.alt_en       = ld.en.alt       || ld.en.title || '';
-        out.slug         = ld.en.slug      || ('news-' + p.id);
-        if (!out.meta_title_en) out.meta_title_en = ld.en.seoTitle || ld.en.title || '';
-      }
-      // 中文版本
-      if (ld.zh) {
-        out.title_zh     = ld.zh.title     || '';
-        out.content_zh   = ld.zh.content   || '';
-        out.seoTitle_zh  = ld.zh.seoTitle  || '';
-        out.alt_zh       = ld.zh.alt       || '';
-        out.meta_title_zh = ld.zh.seoTitle || '';
-      }
-      // 越南语版本
-      if (ld.vi) {
-        out.title_vi     = ld.vi.title     || '';
-        out.content_vi   = ld.vi.content   || '';
-        out.seoTitle_vi  = ld.vi.seoTitle  || '';
-        out.alt_vi       = ld.vi.alt       || '';
-        out.meta_title_vi = ld.vi.seoTitle || '';
-      }
-      // 菲律宾语版本
-      if (ld.ph) {
-        out.title_tl     = ld.ph.title     || '';
-        out.content_tl   = ld.ph.content   || '';
-        out.seoTitle_tl  = ld.ph.seoTitle  || '';
-        out.alt_tl       = ld.ph.alt       || '';
-        out.meta_title_tl = ld.ph.seoTitle || '';
-      }
-      // 默认值
-      if (!out.title) out.title = (ld.en && ld.en.title) || (ld.zh && ld.zh.title) || '';
-      if (!out.content) out.content = (ld.en && ld.en.content) || '';
-      // slug：取任意语言的非空 slug，如果没有就用 'news-{id}'
-      if (!out.slug || out.slug === '') {
-        var slugSrc = (ld.en && ld.en.slug) || (ld.zh && ld.zh.slug) || (ld.vi && ld.vi.slug) || (ld.ph && ld.ph.slug) || '';
-        out.slug = slugSrc || ('news-' + p.id);
-      }
-      if (!out.cover_image && p.images && p.images.length > 0) out.cover_image = p.images[0];
-    }
-    
-    // 确保有默认值
-    if (!out.category) out.category = 'Industry Knowledge';
-    if (!out.status) out.status = '已发布';
-    if (!out.published_at && p.date) out.published_at = p.date;
-    
-    return out;
-  }
-
-  // ── 主入口 ───────────────────────────────────
-  // 立即加载数据
-  function initNewsDetail() {
-    var slug = getParam('slug') || getParam('id');
-    console.log('[news-detail] init, slug:', slug);
-    
+  // ── Init ────────────────────────────────────────────────────
+  document.addEventListener('DOMContentLoaded', async function() {
+    var slug = new URLSearchParams(window.location.search).get('slug')
+            || new URLSearchParams(window.location.search).get('id');
     if (!slug) {
-      showError();
+      document.getElementById('loadingContainer').innerHTML =
+        '<p style="text-align:center;color:var(--gray-500);padding:40px;">Invalid article. <a href="news.html">Back to News</a></p>';
       return;
     }
-    
-    // 直接获取新闻数据
-    fetch('/api/blog/' + encodeURIComponent(slug))
-      .then(function(r) { return r.json(); })
-      .then(function(json) {
-        console.log('[news-detail] API response:', json.success, json.data ? 'has data' : 'no data');
-        if (!json.success || !json.data) {
-          showError();
-          return;
-        }
-        var post = normalizePost(json.data);
-        renderArticle(post);
-        loadRelated(post);
-      })
-      .catch(function(e) {
-        console.error('[news-detail] fetch error:', e);
-        showError();
+
+    installLangInterceptor();
+
+    try {
+      var lang = getLang();
+
+      // Fetch all posts for related articles
+      var rAll = await fetch('/api/blog');
+      var jsonAll = await rAll.json();
+      _cachedPosts = (jsonAll.data || []).map(normalizePost).filter(function(p) {
+        return p.status === '已发布' || p.status === 'published';
       });
-  }
-  
-  // 页面加载时立即执行
-  initNewsDetail();
 
-  function showError() {
-    var loading = document.getElementById('bdLoading');
-    var error = document.getElementById('bdError');
-    if (loading) loading.style.display = 'none';
-    if (error) error.style.display = '';
-  }
-
-  // ── 导航 ─────────────────────────────────────
-  window.toggleMenu = function() {
-    document.getElementById('navMenu').classList.toggle('open');
-  };
-
-  // ══════════════════════════════════════════════════════════════════
-  // MutationObserver — 仅监听正文区域翻译完成后的 TOC 更新
-  // 不再监听 applyI18n，避免循环
-  // ══════════════════════════════════════════════════════════════════
-  (function initDetailObservers() {
-    if (typeof MutationObserver === 'undefined') return;
-
-    var contentEl = document.getElementById('bdContent');
-    if (contentEl) {
-      var _tocTimer = null;
-      new MutationObserver(function(mutations) {
-        var hasNodes = mutations.some(function(m) { return m.addedNodes.length > 0; });
-        if (hasNodes) {
-          clearTimeout(_tocTimer);
-          _tocTimer = setTimeout(function() {
-            buildToc(contentEl);
-          }, 100);
-        }
-      }).observe(contentEl, { childList: true, subtree: true });
-    }
-  })();
-
-  // ── 语言切换 ──
-  (function setupLanguageSwitch() {
-    // 等待 i18n 加载完成
-    var checkCount = 0;
-    var checkMax = 100;
-    var checkInterval = setInterval(function() {
-      checkCount++;
-      if (window.i18n && window.i18n.changeLanguage) {
-        clearInterval(checkInterval);
-        var original = window.i18n.changeLanguage.bind(window.i18n);
-        window.i18n.changeLanguage = function(lang) {
-          // 保存到 localStorage
-          localStorage.setItem('jinyu_lang', lang);
-          // 重新加载页面
-          window.location.reload();
-        };
-      } else if (checkCount >= checkMax) {
-        clearInterval(checkInterval);
+      // Fetch single post
+      var r = await fetch('/api/blog/' + encodeURIComponent(slug));
+      var json = await r.json();
+      if (!json.success || !json.data) {
+        document.getElementById('loadingContainer').innerHTML =
+          '<p style="text-align:center;color:var(--gray-500);padding:40px;">Article not found. <a href="news.html">Back to News</a></p>';
+        return;
       }
-    }, 50);
-  })();
 
-  // 监听 langChange 事件也重新加载
-  document.addEventListener('langChange', function() {
-    window.location.reload();
+      _currentPost = normalizePost(json.data);
+      await renderArticle(_currentPost, _cachedPosts, lang);
+    } catch(e) {
+      console.error('[news-detail] Failed:', e);
+      document.getElementById('loadingContainer').innerHTML =
+        '<p style="text-align:center;color:var(--gray-500);padding:40px;">Failed to load article. <a href="news.html">Back to News</a></p>';
+    }
   });
 
-})(); // 关闭 IIFE
+  document.addEventListener('langChange', function() {
+    installLangInterceptor();
+    if (_currentPost && _cachedPosts) {
+      var lang = getLang();
+      renderArticle(_currentPost, _cachedPosts, lang);
+    }
+  });
+
+})();
 </script>
+
+<script>
+window.addEventListener('scroll', function() {
+  var nb = document.getElementById('navbar');
+  if (nb) nb.classList.toggle('scrolled', window.scrollY > 60);
+});
+function toggleMenu() { document.getElementById('navMenu').classList.toggle('open'); }
+</script>
+
 </body>
 </html>

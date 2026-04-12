@@ -176,8 +176,9 @@ function handleProductDetail(req, res, productId) {
 
 // ── 翻译代理（国内可访问，服务端转发）──────────────────────────
 // GET /api/translate?text=...&from=zh&to=en
-// 主接口：有道翻译（无需Key，国内稳定）
-// 备用接口：MyMemory（全球可用）
+// 主接口：有道翻译（无需Key，国内稳定）— 适用于 zh/en/vi
+// 菲律宾语(tl)专用：微软 Edge Translate（有道不支持 tl）
+// 兜底接口：MyMemory（全球可用）
 function handleTranslate(req, res) {
   const parsedQ = url.parse(req.url, true);
   const { text, from, to } = parsedQ.query;
@@ -186,8 +187,13 @@ function handleTranslate(req, res) {
     return res.end(JSON.stringify({ success: false, result: text || '' }));
   }
 
+  // ── 菲律宾语(tl)：走微软 Edge Translate（有道不支持 tl）──
+  if (to === 'tl' || to === 'fil' || to === 'ph') {
+    return handleMsTranslate(req, res, text, from, to);
+  }
+
   // 语言代码映射（有道格式）
-  const YOUDAO_LANG = { zh: 'zh-CHS', en: 'en', vi: 'vi', tl: 'tl', auto: 'auto' };
+  const YOUDAO_LANG = { zh: 'zh-CHS', en: 'en', vi: 'vi', auto: 'auto' };
   const fromCode = YOUDAO_LANG[from] || 'auto';
   const toCode   = YOUDAO_LANG[to]   || 'en';
 
@@ -256,6 +262,108 @@ function handleTranslate(req, res) {
   });
   ydReq.on('error', () => fallbackMyMemory(text));
   ydReq.end();
+}
+
+// ── 微软 Edge 翻译（用于菲律宾语等有道不支持的语言）──
+let _msToken = null;
+let _msTokenExpiry = 0;
+
+function getMsToken(cb) {
+  if (_msToken && Date.now() < _msTokenExpiry) return cb(null, _msToken);
+  const req = https.request('https://edge.microsoft.com/translate/auth', {
+    headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' },
+    timeout: 8000
+  }, res => {
+    let d = '';
+    res.on('data', c => d += c);
+    res.on('end', () => {
+      _msToken = d.trim();
+      _msTokenExpiry = Date.now() + 9 * 60 * 1000;
+      cb(null, _msToken);
+    });
+  });
+  req.on('error', cb);
+  req.on('timeout', () => { req.destroy(); cb(new Error('timeout')); });
+  req.end();
+}
+
+function handleMsTranslate(req, res, text, from, to) {
+  getMsToken(function(err, token) {
+    if (err || !token) {
+      // 微软失败，fallback 到 MyMemory
+      return fallbackMyMemoryForTl(text, from, to, res);
+    }
+
+    const msLangMap = { 'en': 'en', 'zh': 'zh-Hans', 'vi': 'vi', 'tl': 'fil', 'fil': 'fil', 'ph': 'fil' };
+    const msFrom = msLangMap[from] || 'auto';
+    const msTo   = msLangMap[to]   || 'fil';
+    
+    const msUrlObj = new URL('https://api-edge.cognitive.microsofttranslator.com/translate?from=' + msFrom + '&to=' + msTo + '&api-version=3.0&textType=plain');
+    
+    const msBody = JSON.stringify([{ Text: text }]);
+    const msReq = https.request({
+      hostname: msUrlObj.hostname,
+      path: msUrlObj.pathname + msUrlObj.search,
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json',
+        'User-Agent': 'Mozilla/5.0'
+      },
+      timeout: 10000
+    }, msRes => {
+      let msBody = '';
+      msRes.on('data', d => msBody += d);
+      msRes.on('end', () => {
+        try {
+          const j = JSON.parse(msBody);
+          const result = j?.[0]?.translations?.[0]?.text;
+          if (result && result.trim()) {
+            res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Access-Control-Allow-Origin': '*' });
+            return res.end(JSON.stringify({ success: true, result: result.trim() }));
+          }
+        } catch(e) {}
+        fallbackMyMemoryForTl(text, from, to, res);
+      });
+    });
+    msReq.on('error', () => fallbackMyMemoryForTl(text, from, to, res));
+    msReq.on('timeout', () => { msRes.destroy(); fallbackMyMemoryForTl(text, from, to, res); });
+    msReq.write(msBody);
+    msReq.end();
+  });
+}
+
+function fallbackMyMemoryForTl(originalText, from, to, res) {
+  const mmLang = { zh: 'zh-CN', en: 'en', vi: 'vi', tl: 'tl' };
+  const langPair = (mmLang[from] || 'en') + '|' + (mmLang[to] || 'tl');
+  const mmPath = '/get?q=' + encodeURIComponent(originalText) + '&langpair=' + encodeURIComponent(langPair);
+  const mmOpt = {
+    hostname: 'api.mymemory.translated.net',
+    path: mmPath,
+    method: 'GET',
+    headers: { 'User-Agent': 'Mozilla/5.0' }
+  };
+  let body = '';
+  const mmReq = https.request(mmOpt, mmRes => {
+    mmRes.on('data', d => { body += d; });
+    mmRes.on('end', () => {
+      try {
+        const j = JSON.parse(body);
+        const translated = j.responseData && j.responseData.translatedText;
+        if (translated && !translated.includes('MYMEMORY WARNING')) {
+          res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Access-Control-Allow-Origin': '*' });
+          return res.end(JSON.stringify({ success: true, result: translated }));
+        }
+      } catch(e) {}
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Access-Control-Allow-Origin': '*' });
+      res.end(JSON.stringify({ success: false, result: originalText }));
+    });
+  });
+  mmReq.on('error', () => {
+    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Access-Control-Allow-Origin': '*' });
+    res.end(JSON.stringify({ success: false, result: originalText }));
+  });
+  mmReq.end();
 }
 
 // ── HTTP 服务器 ─────────────────────────────────────────────────

@@ -118,15 +118,7 @@
             <a href="applications.html#exhibition-display" data-i18n="nav.applications_sub.exhibitionDisplay">Exhibition Display</a>
           </div>
         </li>
-        <li class="nav-item">
-          <a href="case-studies.html" class="nav-link" data-i18n="nav.caseStudies">Case Studies <svg viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></a>
-          <div class="dropdown">
-            <a href="case-studies.html#supermarket" data-i18n="nav.caseStudies_sub.supermarket">Supermarket Sign Project</a>
-            <a href="case-studies.html#mall-lightbox" data-i18n="nav.caseStudies_sub.mallLightbox">Mall Light Box Project</a>
-            <a href="case-studies.html#outdoor-billboard" data-i18n="nav.caseStudies_sub.outdoorBillboard">Outdoor Billboard Project</a>
-            <a href="case-studies.html#shop-sign" data-i18n="nav.caseStudies_sub.shopSign">Shop Sign Project</a>
-          </div>
-        </li>
+        <li class="nav-item"><a href="case-studies.html" class="nav-link" data-i18n="nav.caseStudies">Cases / Videos</a></li>
         <li class="nav-item">
           <a href="news.html" class="nav-link" data-i18n="nav.news">News <svg viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></a>
           <div class="dropdown">
@@ -1788,44 +1780,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     // fallback 到本地 SVG 占位图
     return `/images/${p.id}.svg`;
   }
-  // 从对象中按语言后缀取值，空时自动翻译（使用后台 /api/translate）
-  // 逻辑与 i18n.js 的 pickLang 一致：先读 _vi/_tl，找不到则翻译 _en 源文本
-  async function pickField(obj, base, lang) {
-    if (!obj || !base || !lang) return '';
-    // 先直接读对应语言字段
-    var directVal = '';
-    if (lang === 'tl') {
-      var tlSuffixes = ['_tl', '_fil', '_ph'];
-      for (var s = 0; s < tlSuffixes.length; s++) {
-        if (obj[base + tlSuffixes[s]] && obj[base + tlSuffixes[s]].trim()) {
-          directVal = obj[base + tlSuffixes[s]]; break;
-        }
-      }
-    } else {
-      var v = obj[base + '_' + lang];
-      if (v && (typeof v === 'string' ? v.trim() : (Array.isArray(v) ? v.length > 0 : true))) {
-        directVal = v;
-      }
-    }
-    if (directVal) return directVal;
-
-    // 字段为空时：en 直接回退到 zh/通用字段；zh/vi/tl 尝试翻译
-    if (lang === 'en') {
-      return obj[base + '_zh'] || obj[base] || '';
-    }
-
-    // zh/vi/tl：字段为空，找可用源文本并翻译
-    if (window.autoTranslate) {
-      var srcText = obj[base + '_en'] || obj[base + '_zh'] || obj[base] || '';
-      if (typeof srcText === 'string' && srcText.trim()) {
-        var fromLang = obj[base + '_en'] ? 'en' : 'zh';
-        try {
-          return await window.autoTranslate.translate(srcText.trim(), fromLang, lang);
-        } catch(e) {}
-      }
-    }
-    // 最终 fallback
-    return obj[base + '_en'] || obj[base + '_zh'] || obj[base] || '';
+  // 复用 i18n.js 的 pickLang（带 i18n 缓存层：字段→缓存→API翻译→回写缓存）
+  var pickField = window.autoTranslate ? window.autoTranslate.pickLang : null;
+  // 如果 autoTranslate 不可用（极端情况），提供一个最小 fallback
+  if (!pickField) {
+    pickField = async function(obj, base, lang) {
+      if (!obj || !base || !lang) return '';
+      if (lang === 'en') return obj[base + '_en'] || obj[base] || obj[base + '_zh'] || '';
+      if (lang === 'zh') { var z = (obj[base + '_zh'] || '').trim(); return z || obj[base + '_en'] || ''; }
+      var suffixes = lang === 'tl' ? ['_tl','_fil','_ph'] : ['_' + lang];
+      for (var i = 0; i < suffixes.length; i++) { var v = obj[base + suffixes[i]]; if (v && v.trim()) return v; }
+      return obj[base + '_en'] || obj[base] || '';
+    };
   }
 
   // 产品名称（async，用于语言切换时重新渲染）
@@ -1855,135 +1821,109 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
-  // ── 渲染函数：可被语言切换重新调用 ────────────────────────────────────────
+    // ── 渲染函数：可被语言切换重新调用 ────────────────────────────────────────
+  // 优化：先即时显示已有文本（英文/fallback），再异步翻译逐格替换，不阻塞整体
   async function renderProductInfo(lang) {
     const [name, desc] = await Promise.all([getName(product, lang), getDesc(product, lang)]);
     const category = getCategory(product);
-
-    // Update page title & breadcrumb
     document.title = name + ' – Jinyu';
-    const bannerName = document.getElementById('pdBannerName');
+    var bannerName = document.getElementById('pdBannerName');
     if (bannerName) bannerName.textContent = name;
-
-    // Fill info
     document.getElementById('pdCategory').textContent = category;
     document.getElementById('pdName').textContent = name;
     document.getElementById('pdDesc').textContent = desc;
 
-    // Specs table：优先 API 多语言字段，为空时自动翻译
-    const specTable = document.getElementById('pdSpecTable');
-    const specsBox = document.getElementById('pdSpecsBox');
+    // Specs table —— 先立即渲染，再异步翻译逐行替换
+    var specTable = document.getElementById('pdSpecTable');
+    var specsBox = document.getElementById('pdSpecsBox');
     specTable.innerHTML = '';
-    const specs = (Array.isArray(product.specs) && product.specs.length > 0)
-      ? product.specs
-      : (localProduct ? localProduct.specs || [] : []);
+    var specs = (Array.isArray(product.specs) && product.specs.length > 0)
+      ? product.specs : (localProduct ? localProduct.specs || [] : []);
     if (specs.length > 0) {
       specsBox.style.display = '';
-      const curLang = (typeof getLang === 'function') ? getLang() : (localStorage.getItem('jinyu_lang') || 'en');
-      const specPairs = await Promise.all(specs.map(async function(spec) {
-        let key = '', val = '';
-        if (Array.isArray(spec)) {
-          // 旧格式：[key, val]，已有英文值，需翻译为当前语言
-          key = spec[0] || ''; val = spec[1] || '';
-          if (curLang !== 'zh' && curLang !== 'en' && window.autoTranslate) {
-            if (key.trim()) key = await window.autoTranslate.translate(key, 'en', curLang);
-            if (val.trim()) val = await window.autoTranslate.translate(val, 'en', curLang);
-          }
-        } else if (spec && typeof spec === 'object') {
-          // 新多语言格式：优先当前语言字段，空时自动翻译英文值
-          var kTlVal = spec.k_tl || spec.k_fil || spec.k_ph || '';
-          var vTlVal = spec.v_tl || spec.v_fil || spec.v_ph || '';
-          const kMap = { zh: spec.k_zh, en: spec.k_en, vi: spec.k_vi, tl: kTlVal };
-          const vMap = { zh: spec.v_zh, en: spec.v_en, vi: spec.v_vi, tl: vTlVal };
-          const rawKey = kMap[curLang] || '';
-          const rawVal = vMap[curLang] || '';
-          const hasLang = rawKey.trim() && rawVal.trim()
-            // zh/en 字段与 en 字段相同视为"无真实中文翻译"时不当作 hasLang
-            && !(curLang === 'zh' && rawKey.trim() === (spec.k_en || '').trim() && rawVal.trim() === (spec.v_en || '').trim());
-          key = rawKey || spec.k_en || '';
-          val = rawVal || spec.v_en || '';
-          // 当前语言无值（或 zh 字段只是英文占位），翻译英文源文本
-          if (!hasLang && window.autoTranslate && curLang !== 'en') {
-            if (spec.k_en && spec.k_en.trim()) try { key = await window.autoTranslate.translate(spec.k_en, 'en', curLang); } catch(e) {}
-            if (spec.v_en && spec.v_en.trim()) try { val = await window.autoTranslate.translate(spec.v_en, 'en', curLang); } catch(e) {}
-          }
-        } else {
-          key = String(spec); val = '';
-        }
-        return { key, val };
-      }));
-      specPairs.forEach(function(pair) {
-        const tr = document.createElement('tr');
-        tr.innerHTML = '<td>' + pair.key + '</td><td>' + pair.val + '</td>';
+      var curLang = lang || (typeof getLang === 'function' ? getLang() : (localStorage.getItem('jinyu_lang') || 'en'));
+      specs.forEach(function(spec, idx) {
+        var dk = '', dv = '';
+        if (Array.isArray(spec)) { dk = spec[0] || ''; dv = spec[1] || ''; }
+        else if (spec && typeof spec === 'object') {
+          var ktv = spec.k_tl || spec.k_fil || spec.k_ph || '';
+          var vtv = spec.v_tl || spec.v_fil || spec.v_ph || '';
+          var km = { zh: spec.k_zh, en: spec.k_en, vi: spec.k_vi, tl: ktv };
+          var vm = { zh: spec.v_zh, en: spec.v_en, vi: spec.v_vi, tl: vtv };
+          dk = km[curLang] || spec.k_en || '';
+          dv = vm[curLang] || spec.v_en || '';
+        } else { dk = String(spec); dv = ''; }
+        // 立即渲染已有文本
+        var tr = document.createElement('tr');
+        tr.id = 'specRow' + idx;
+        tr.innerHTML = '<td>' + dk + '</td><td>' + dv + '</td>';
         specTable.appendChild(tr);
-      });
-    } else {
-      specsBox.style.display = 'none';
-    }
-
-    // Features：优先 API 多语言字段，为空时自动翻译
-    const featureList = document.getElementById('pdFeatureList');
-    const featuresBox = document.getElementById('pdFeaturesBox');
-    featureList.innerHTML = '';
-    const curLang2 = (typeof getLang === 'function') ? getLang() : (localStorage.getItem('jinyu_lang') || 'en');
-    const langKeyMap = { zh: 'features_zh', en: 'features_en', vi: 'features_vi', tl: 'features_tl' };
-    let apiFeatureField = product[langKeyMap[curLang2]];
-    if (!apiFeatureField || (Array.isArray(apiFeatureField) && apiFeatureField.length === 0)) {
-      apiFeatureField = product[langKeyMap['en']];
-    }
-    let features = [];
-    if (Array.isArray(apiFeatureField) && apiFeatureField.length > 0) {
-      features = apiFeatureField;
-    } else if (typeof apiFeatureField === 'string' && apiFeatureField.trim()) {
-      features = apiFeatureField.split('; ').filter(function(f) { return f; });
-    }
-    // API 无数据时 fallback 本地
-    if (features.length === 0 && localProduct) {
-      features = localProduct.features || [];
-    }
-    // 自动翻译缺失的 features（zh/vi/tl 字段为空时，翻译英文）
-    const enFeatures = (Array.isArray(product.features_en) && product.features_en.length > 0)
-      ? product.features_en
-      : (typeof product.features_en === 'string' ? product.features_en.split('; ').filter(Boolean) : []);
-    const zhFeatures = (Array.isArray(product.features_zh) && product.features_zh.length > 0)
-      ? product.features_zh
-      : (typeof product.features_zh === 'string' ? product.features_zh.split('; ').filter(Boolean) : []);
-    const needTranslate = curLang2 !== 'en' && window.autoTranslate && features.length > 0;
-    // 判断当前 features 是否都是英文原文（即没有真实当前语言翻译）
-    const isFallbackEn = curLang2 !== 'en' && enFeatures.length > 0
-      && features.every(function(f, i) { return f === (enFeatures[i] || ''); });
-    if (needTranslate && isFallbackEn) {
-      const fromLang2 = zhFeatures.length > 0 ? 'zh' : 'en';
-      const srcFeatures = zhFeatures.length > 0 ? zhFeatures : enFeatures;
-      features = await Promise.all(srcFeatures.map(async function(f) {
-        if (typeof f === 'string' && f.trim()) {
-          try { return await window.autoTranslate.translate(f, fromLang2, curLang2); } catch(e) {}
+        // 异步翻译替换（fire-and-forget）：zh/vi/tl 都需要翻译（specs 数据通常只有 k_en/v_en）
+        if (curLang !== 'en' && window.autoTranslate && (dk || dv)) {
+          (function(row, ok, ov, sp) {
+            (async function() {
+              var nk = ok, nv = ov;
+              if (Array.isArray(sp)) {
+                if (ok.trim()) try { nk = await window.autoTranslate.translate(ok, 'en', curLang); } catch(e){}
+                if (ov.trim()) try { nv = await window.autoTranslate.translate(ov, 'en', curLang); } catch(e){}
+              } else if (sp && typeof sp === 'object') {
+                var hk = sp['k_' + curLang] && sp['k_' + curLang].trim()
+                  && !(curLang === 'zh' && (sp.k_zh||'').trim() === (sp.k_en||'').trim());
+                var hv = sp['v_' + curLang] && sp['v_' + curLang].trim()
+                  && !(curLang === 'zh' && (sp.v_zh||'').trim() === (sp.v_en||'').trim());
+                if (!hk && sp.k_en && sp.k_en.trim()) try { nk = await window.autoTranslate.translate(sp.k_en, 'en', curLang); } catch(e){}
+                if (!hv && sp.v_en && sp.v_en.trim()) try { nv = await window.autoTranslate.translate(sp.v_en, 'en', curLang); } catch(e){}
+              }
+              if (nk !== ok || nv !== ov) row.innerHTML = '<td>' + nk + '</td><td>' + nv + '</td>';
+            })();
+          })(tr, dk, dv, spec);
         }
-        return f;
-      }));
-    }
-    if (features.length > 0) {
-      featuresBox.style.display = '';
-      features.forEach(function(f) {
-        const li = document.createElement('li');
-        if (typeof f === 'string') {
-          li.textContent = f;
-        } else if (f && typeof f === 'object') {
-          li.textContent = f[curLang2] || f.en || f.zh || '';
-        }
-        featureList.appendChild(li);
       });
-    } else {
-      featuresBox.style.display = 'none';
-    }
+    } else { specsBox.style.display = 'none'; }
 
-    // Get a Quote 按钮带产品名参数
-    const quoteBtn = document.querySelector('.pd-btn-quote');
-    if (quoteBtn) {
-      quoteBtn.href = 'contact.html?product=' + encodeURIComponent(name);
-    }
+    // Features —— 先立即渲染，再异步翻译逐条替换
+    var featList = document.getElementById('pdFeatureList');
+    var featBox = document.getElementById('pdFeaturesBox');
+    featList.innerHTML = '';
+    var cL = lang || (typeof getLang === 'function' ? getLang() : (localStorage.getItem('jinyu_lang') || 'en'));
+    var lkm = { zh: 'features_zh', en: 'features_en', vi: 'features_vi', tl: 'features_tl' };
+    var apif = product[lkm[cL]];
+    if (!apif || (Array.isArray(apif) && apif.length === 0)) apif = product[lkm['en']];
+    var feats = [];
+    if (Array.isArray(apif) && apif.length > 0) feats = apif;
+    else if (typeof apif === 'string' && apif.trim()) feats = apif.split('; ').filter(Boolean);
+    if (feats.length === 0 && localProduct) feats = localProduct.features || [];
+    if (feats.length > 0) {
+      featBox.style.display = '';
+      var efArr = Array.isArray(product.features_en) ? product.features_en : [];
+      if (!efArr.length && typeof product.features_en === 'string') efArr = product.features_en.split('; ').filter(Boolean);
+      var zfArr = Array.isArray(product.features_zh) ? product.features_zh : [];
+      if (!zfArr.length && typeof product.features_zh === 'string') zfArr = product.features_zh.split('; ').filter(Boolean);
+      var isFbEn = cL !== 'en' && efArr.length > 0
+        && feats.every(function(f, i) { return f === (efArr[i] || ''); });
+      var needT = cL !== 'en' && window.autoTranslate && isFbEn;
+      var fFrom = zfArr.length > 0 ? 'zh' : 'en';
+      var fSrc = zfArr.length > 0 ? zfArr : efArr;
+      feats.forEach(function(f, idx) {
+        var li = document.createElement('li');
+        li.id = 'featItem' + idx;
+        li.textContent = f;
+        featList.appendChild(li);
+        if (needT && fSrc[idx]) {
+          (function(el, txt) {
+            (async function() {
+              try { var tr = await window.autoTranslate.translate(txt, fFrom, cL); if (tr && tr !== txt) el.textContent = tr; }
+              catch(e){}
+            })();
+          })(li, fSrc[idx]);
+        }
+      });
+    } else { featBox.style.display = 'none'; }
+
+    // Get a Quote 按钮
+    var qb = document.querySelector('.pd-btn-quote');
+    if (qb) qb.href = 'contact.html?product=' + encodeURIComponent(name);
   }
-
   // 初始渲染
   const initLang = getLang();
   renderProductInfo(initLang);
@@ -1995,17 +1935,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     var originalChangeLanguage = window.i18n.changeLanguage.bind(window.i18n);
     window.i18n.changeLanguage = async function(lang) {
       await originalChangeLanguage(lang);
-      // 语言切换完成后，重新渲染产品详情
+      // 语言切换完成后，重新渲染产品详情 + 相关产品
       if (_product) {
         renderProductInfo(lang);
+        renderRelatedProducts();
       }
     };
   }
 
   // 保留 langChange 事件监听器作为备用
   document.addEventListener('langChange', function(e) {
-    const lang = e.detail?.lang || getLang();
+    const lang = e.detail && e.detail.lang ? e.detail.lang : getLang();
     renderProductInfo(lang);
+    renderRelatedProducts();
   });
 
   // Images
@@ -2035,31 +1977,37 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Related products: 优先 API（同分类前4个，排除自身），fallback 本地 related 数组
   const relatedGrid = document.getElementById('pdRelatedGrid');
-  let relatedList = [];
-  if (allApiProducts.length > 0) {
-    relatedList = allApiProducts
-      .filter(p => p.category_id === product.category_id && p.id !== id)
-      .slice(0, 4)
-      .map(p => ({ id: p.id, name: getName(p), img: getMainImage(p) }));
-  }
-  if (relatedList.length === 0 && product.related && typeof PRODUCTS !== 'undefined') {
-    relatedList = (product.related || []).slice(0, 4)
-      .map(relId => {
-        const rel = PRODUCTS[relId];
+  
+  async function renderRelatedProducts() {
+    const relLang = getLang();
+    let relItems = [];
+    if (allApiProducts.length > 0) {
+      var candidates = allApiProducts.filter(function(p) { return p.category_id === product.category_id && p.id !== id; }).slice(0, 4);
+      relItems = await Promise.all(candidates.map(async function(p) {
+        return { id: p.id, name: await getName(p, relLang), img: getMainImage(p) };
+      }));
+    }
+    if (relItems.length === 0 && product.related && typeof PRODUCTS !== 'undefined') {
+      relItems = (product.related || []).slice(0, 4).map(function(relId) {
+        var rel = PRODUCTS[relId];
         if (!rel) return null;
-        return { id: relId, name: rel.name, img: rel.img };
+        return { id: relId, name: rel.name || '', img: rel.img };
       }).filter(Boolean);
+    }
+    // 清空旧卡片再渲染
+    relatedGrid.innerHTML = '';
+    relItems.forEach(function(item) {
+      if (!item) return;
+      var card = document.createElement('div');
+      card.className = 'pd-rel-card';
+      card.onclick = function() { window.location.href = 'product-detail.html?id=' + item.id; };
+      card.innerHTML =
+        '<img src="' + (item.img || placeholderSVG(item.name)) + '" alt="' + item.name + '" loading="lazy" onerror="this.style.opacity=0.3">' +
+        '<div class="pd-rel-card-name">' + item.name + '</div>';
+      relatedGrid.appendChild(card);
+    });
   }
-  relatedList.forEach(({ id: relId, name: relName, img: relImg }) => {
-    const card = document.createElement('div');
-    card.className = 'pd-rel-card';
-    card.onclick = () => { window.location.href = `product-detail.html?id=${relId}`; };
-    card.innerHTML = `
-      <img src="${relImg || placeholderSVG(relName)}" alt="${relName}" loading="lazy" onerror="this.style.opacity=0.3">
-      <div class="pd-rel-card-name">${relName}</div>
-    `;
-    relatedGrid.appendChild(card);
-  });
+  renderRelatedProducts();
 
   // Show body
   document.getElementById('pdBody').style.display = 'block';

@@ -272,7 +272,8 @@ window.i18n = i18n;
 
 // ========================================
 // window.autoTranslate —— 供各页面 pickLang / translate 调用
-// 走后台 /api/translate 代理，带 sessionStorage 缓存
+// 走后台 /api/translate 代理，带 sessionStorage 缓存 + translations.json 持久化
+// 优先级：products.json 字段 → translations.json(i18n)缓存 → API 实时翻译→回写缓存
 // ========================================
 (function setupAutoTranslate() {
   var cache = {};
@@ -281,9 +282,41 @@ window.i18n = i18n;
     return from + '|' + to + '|' + text;
   }
 
-  // 翻译单段文本（带缓存）
-  async function translate(text, from, to) {
+  /**
+   * 从 i18n.translations 中读取动态翻译缓存
+   * key 格式：prod_{id}_{field} 如 prod_42_name
+   */
+  function readI18nCache(id, field, lang) {
+    if (!id || !field || !lang || lang === 'en') return '';
+    var key = 'prod_' + id + '_' + field;
+    var dict = (window.i18n && window.i18n.translations && window.i18n.translations[lang]) || {};
+    return dict[key] || '';
+  }
+
+  /**
+   * 将翻译结果异步写入 translations.json（不阻塞渲染）
+   */
+  function saveToI18nCache(id, field, lang, text) {
+    if (!id || !field || !lang || !text || !text.trim() || lang === 'en') return;
+    var key = 'prod_' + id + '_' + field;
+    fetch('/api/i18n/' + lang, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ [key]: text.trim() })
+    }).catch(function(e) {
+      console.warn('[autoTranslate] cache save failed:', e.message);
+    });
+    // 同时更新内存缓存，下次直接用
+    if (window.i18n && window.i18n.translations) {
+      if (!window.i18n.translations[lang]) window.i18n.translations[lang] = {};
+      window.i18n.translations[lang][key] = text.trim();
+    }
+  }
+
+  // 翻译单段文本（带缓存 + 自动持久化）
+  async function translate(text, from, to, opts) {
     if (!text || !text.trim() || from === to) return text;
+    opts = opts || {};
     var key = cacheKey(from, to, text.trim());
     if (cache[key]) return cache[key];
 
@@ -296,7 +329,13 @@ window.i18n = i18n;
       if (!res.ok) return text;
       var data = await res.json();
       var result = data.translatedText || data.result || text;
-      cache[key] = result;
+      // 翻译成功且与原文不同 → 持久化到 translations.json
+      if (result && result.trim() && result !== text) {
+        cache[key] = result;
+        if (opts.cacheKey) {
+          saveToI18nCache(opts.cacheId, opts.cacheField, to, result);
+        }
+      }
       return result;
     } catch (e) {
       console.warn('[autoTranslate] failed:', e.message);
@@ -304,15 +343,29 @@ window.i18n = i18n;
     }
   }
 
-  // 从对象中按 base+语言后缀取值，为空时自动翻译
-  // 例如 pickLang({ name_zh: '灯箱布', name_en: 'Banner' }, 'name', 'vi')
-  // → 如果 name_vi 为空，则翻译 name_zh 或 name_en 为越南语
+  // 从对象中按 base+语言后缀取值，为空时自动翻译（含 i18n 缓存层）
+  // 例如 pickLang({ id:42, name_zh:'灯箱布', name_en:'Banner' }, 'name', 'tl')
+  // 优先级：①字段值 → ②i18n(translations.json)缓存 → ③API翻译→自动存入②
   async function pickLang(obj, base, lang) {
     if (!obj || !base || !lang) return '';
-    if (lang === 'en' || lang === 'zh') {
-      return obj[base + '_' + lang] || obj[base + '_en'] || obj[base + '_zh'] || obj[base] || '';
+    // 英文：读 _en，有则直接返回
+    if (lang === 'en') {
+      return obj[base + '_en'] || obj[base] || obj[base + '_zh'] || '';
     }
-    // 按优先级尝试 vi/tl 后缀
+    // 中文：读 _zh（必须 trim 检测非空），为空时查缓存或翻译
+    if (lang === 'zh') {
+      var zhVal = (obj[base + '_zh'] || '').trim();
+      if (zhVal) return zhVal;
+      // ② 查 i18n 缓存
+      var cachedZh = readI18nCache(obj.id, base, lang);
+      if (cachedZh) return cachedZh;
+      // 有英文但无中文 → 翻译并缓存
+      var enSrc = (obj[base + '_en'] || obj[base] || '').trim();
+      if (!enSrc) return '';
+      var result = await translate(enSrc, 'en', 'zh', { cacheId: obj.id, cacheField: base });
+      return result;
+    }
+    // 越南/菲律宾：先读对应后缀字段
     var suffix = lang === 'tl' ? ['_tl', '_fil', '_ph'] : ['_' + lang];
     var found = '';
     for (var i = 0; i < suffix.length; i++) {
@@ -320,11 +373,15 @@ window.i18n = i18n;
     }
     if (found && found.trim()) return found;
 
-    // 找源文本：优先中文，其次英文
-    var srcText = obj[base + '_zh'] || obj[base + '_en'] || obj[base] || '';
+    // ② 查 i18n 缓存（translations.json 中之前的翻译结果）
+    var cached = readI18nCache(obj.id, base, lang);
+    if (cached) return cached;
+
+    // ③ 字段和缓存都为空 → API 翻译并自动存入缓存
+    var srcText = obj[base + '_en'] || obj[base + '_zh'] || obj[base] || '';
     if (!srcText || !srcText.trim()) return '';
-    var fromLang = obj[base + '_zh'] ? 'zh' : 'en';
-    return await translate(srcText, fromLang, lang);
+    var translated = await translate(srcText, 'en', lang, { cacheId: obj.id, cacheField: base });
+    return translated;
   }
 
   window.autoTranslate = {

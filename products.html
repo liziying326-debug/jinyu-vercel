@@ -53,15 +53,7 @@
             <a href="applications.html#exhibition-display" data-i18n="nav.applications_sub.exhibitionDisplay">Exhibition Display</a>
           </div>
         </li>
-        <li class="nav-item">
-          <a href="case-studies.html" class="nav-link" data-i18n="nav.caseStudies">Case Studies <svg viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></a>
-          <div class="dropdown">
-            <a href="case-studies.html#supermarket" data-i18n="nav.caseStudies_sub.supermarket">Supermarket Sign Project</a>
-            <a href="case-studies.html#mall-lightbox" data-i18n="nav.caseStudies_sub.mallLightbox">Mall Light Box Project</a>
-            <a href="case-studies.html#outdoor-billboard" data-i18n="nav.caseStudies_sub.outdoorBillboard">Outdoor Billboard Project</a>
-            <a href="case-studies.html#shop-sign" data-i18n="nav.caseStudies_sub.shopSign">Shop Sign Project</a>
-          </div>
-        </li>
+        <li class="nav-item"><a href="case-studies.html" class="nav-link" data-i18n="nav.caseStudies">Cases / Videos</a></li>
         <li class="nav-item">
           <a href="news.html" class="nav-link" data-i18n="nav.news">News <svg viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></a>
           <div class="dropdown">
@@ -633,14 +625,28 @@ document.addEventListener('keydown', function(e) {
     try { return localStorage.getItem('jinyu_lang') || localStorage.getItem('lang') || 'en'; } catch(e) { return 'en'; }
   }
 
-  // 从数据对象按当前语言取字段（同步 fallback，不含 _zh/_en，否则 autoTranslate 不会触发）
+  // 从数据对象按当前语言取字段（同步 fallback）
+  // 注意：对 zh 语言，如果 _zh 字段为空但有 _en 内容，返回空字符串让 pickLang 触发翻译
   function pickLangSync(d, key, lang) {
     if (!d) return '';
     lang = lang || getLang();
-    if (lang === 'zh') return d[key + '_zh'] || d[key] || '';
-    if (lang === 'vi') return d[key + '_vi'] || d[key + '_en'] || d[key] || '';
-    if (lang === 'tl') return d[key + '_tl'] || d[key + '_en'] || d[key] || '';
-    return d[key + '_en'] || d[key] || '';
+    var val;
+    if (lang === 'zh') {
+      val = (d[key + '_zh'] || '').trim();
+      if (!val && (d[key + '_en'] || '').trim()) return ''; // 有英文但无中文，让 pickLang 翻译
+      return val || (d[key] || '');
+    }
+    if (lang === 'vi') {
+      val = (d[key + '_vi'] || '').trim();
+      if (!val && (d[key + '_en'] || '').trim()) return '';
+      return val || (d[key + '_en'] || '') || (d[key] || '');
+    }
+    if (lang === 'tl') {
+      val = (d[key + '_tl'] || '').trim();
+      if (!val && (d[key + '_en'] || '').trim()) return '';
+      return val || (d[key + '_en'] || '') || (d[key] || '');
+    }
+    return (d[key + '_en'] || '') || (d[key] || '');
   }
 
   // 异步版：字段为空时调 autoTranslate

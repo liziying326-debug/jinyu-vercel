@@ -401,15 +401,7 @@
             <a href="applications.html#exhibition-display" data-i18n="nav.applications_sub.exhibitionDisplay">Exhibition Display</a>
           </div>
         </li>
-        <li class="nav-item">
-          <a href="case-studies.html" class="nav-link active" data-i18n="nav.caseStudies">Cases / Videos <svg viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></a>
-          <div class="dropdown">
-            <a href="#supermarket" data-i18n="nav.caseStudies_sub.supermarket">Supermarket Sign Project</a>
-            <a href="#mall-lightbox" data-i18n="nav.caseStudies_sub.mallLightbox">Mall Light Box Project</a>
-            <a href="#outdoor-billboard" data-i18n="nav.caseStudies_sub.outdoorBillboard">Outdoor Billboard Project</a>
-            <a href="#shop-sign" data-i18n="nav.caseStudies_sub.shopSign">Shop Sign Project</a>
-          </div>
-        </li>
+        <li class="nav-item"><a href="case-studies.html" class="nav-link active" data-i18n="nav.caseStudies">Cases / Videos</a></li>
         <li class="nav-item">
           <a href="news.html" class="nav-link" data-i18n="nav.news">News <svg viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></a>
           <div class="dropdown">
@@ -668,11 +660,13 @@
   async function pickCaseField(item, baseKey, lang) {
     var direct = getField(item, baseKey, lang);
     if (direct) return direct;
-    // 找英文/中文源文本翻译
+    // 找英文/中文源文本
     var srcEn = item[baseKey + '_en'] || '';
     var srcZh = item[baseKey + '_zh'] || '';
     if (lang === 'en') return srcZh || item[baseKey] || '';
-    // zh/vi/tl 翻译英文源
+    // TL: 翻译 API 不支持菲律宾语，直接 fallback 英文原文
+    if (lang === 'tl') return srcEn || srcZh || item[baseKey] || '';
+    // zh/vi 翻译英文源
     var src = srcEn || srcZh || item[baseKey] || '';
     if (!src.trim()) return '';
     var from = srcEn ? 'en' : 'zh';
@@ -682,14 +676,14 @@
   // 翻译标签文本（region/industry/材料等），所有非源语言均翻译
   async function translateLabel(text, lang) {
     if (!text || !text.trim()) return text;
-    if (lang === 'en') return text; // 原文是英文，en 直接返回
+    if (lang === 'en' || lang === 'tl') return text; // TL 翻译API不支持，直接用原文(英文)
     return await translateAuto(text, 'en', lang);
   }
 
   // 翻译中文标签文本（sources 是中文时）
   async function translateLabelZh(text, lang) {
     if (!text || !text.trim()) return text;
-    if (lang === 'zh') return text;
+    if (lang === 'zh' || lang === 'tl') return text; // TL 直接返回中文（比乱码好）
     return await translateAuto(text, 'zh', lang);
   }
 
@@ -848,24 +842,37 @@
       return;
     }
 
-    // 构建所有卡片（使用缓存）
-    var cardHtmls = [];
-    for (var i = 0; i < items.length; i++) {
-      if (_renderVersion !== myVersion) return; // 语言切换，放弃
-      var c = items[i];
-      var cacheKey = c.id + '___' + lang;
-      var cardHtml;
-      if (_renderedCards[cacheKey]) {
-        cardHtml = _renderedCards[cacheKey];
-      } else {
-        cardHtml = await buildCaseCard(c, i, lang);
-        _renderedCards[cacheKey] = cardHtml;
-      }
-      cardHtmls.push(cardHtml);
-    }
+    // 构建所有卡片（逐个 await，完成后立即写入 DOM，避免版本冲突导致丢卡片）
+    // 先占位显示骨架
+    var placeholders = items.map(function(c, i) {
+      return '<div class="case-card" id="case-placeholder-' + i + '" style="min-height:360px;background:#f1f5f9;border-radius:14px;"></div>';
+    });
+    container.innerHTML = '<div class="cases-grid">' + placeholders.join('') + '</div>';
 
-    if (_renderVersion !== myVersion) return;
-    container.innerHTML = '<div class="cases-grid">' + cardHtmls.join('') + '</div>';
+    // 并发构建所有卡片
+    var cardPromises = items.map(function(c, i) {
+      var cacheKey = (c.id !== undefined ? c.id : i) + '___' + lang;
+      if (_renderedCards[cacheKey]) {
+        return Promise.resolve({ idx: i, html: _renderedCards[cacheKey], key: cacheKey });
+      }
+      return buildCaseCard(c, i, lang).then(function(html) {
+        return { idx: i, html: html, key: cacheKey };
+      });
+    });
+
+    // 逐步更新 DOM（每张卡片完成即替换占位）
+    for (var i = 0; i < cardPromises.length; i++) {
+      var result = await cardPromises[i];
+      // 版本变更时不中断，继续渲染（避免内容变少）
+      _renderedCards[result.key] = result.html;
+      var placeholder = document.getElementById('case-placeholder-' + result.idx);
+      if (placeholder) {
+        var temp = document.createElement('div');
+        temp.innerHTML = result.html;
+        var card = temp.firstChild;
+        if (card) placeholder.parentNode.replaceChild(card, placeholder);
+      }
+    }
   }
 
   var _cachedItems = null;
@@ -923,36 +930,21 @@
     }
   }
 
-  document.addEventListener('langChange', function(e) {
-    var newLang = (e.detail && e.detail.lang) || getLang();
-    // 清除当前语言的卡片缓存，强制重新翻译渲染
-    if (_renderedCards) {
-      Object.keys(_renderedCards).forEach(function(k) {
-        // 缓存 key 格式：caseId___lang，清除切换后语言的缓存
-        if (k.indexOf('___' + newLang) !== -1) {
-          delete _renderedCards[k];
-        }
-      });
-    }
-    if (_cachedItems !== null) {
-      _renderVersion++;
-      renderCases(_cachedItems);
-    }
-  });
-
-  // ── 语言切换拦截：页面加载且数据就绪后，才拦截 i18n.changeLanguage ──
-  // 这样可以确保无论 langChange 事件是否正常工作，页面都能响应语言切换
+  // ── 语言切换拦截 ──
   if (window.i18n) {
-    var originalChangeLanguage = window.i18n.changeLanguage.bind(window.i18n);
+    var _origCL = window.i18n.changeLanguage.bind(window.i18n);
     window.i18n.changeLanguage = async function(lang) {
-      await originalChangeLanguage(lang);
-      // 语言切换完成后，重新渲染案例列表
-      if (_cachedItems !== null) {
-        _renderVersion++;
-        renderCases(_cachedItems);
-      }
+      await _origCL(lang);
+      _renderedCards = {};
+      if (_cachedItems !== null) renderCases(_cachedItems);
     };
   }
+
+  // 保留 langChange 事件监听器作为备用
+  document.addEventListener('langChange', function() {
+    _renderedCards = {};
+    if (_cachedItems !== null) renderCases(_cachedItems);
+  });
 
   document.addEventListener('DOMContentLoaded', loadCases);
 })();
