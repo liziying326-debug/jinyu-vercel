@@ -16,6 +16,22 @@
       "dest": "/api/categories.js"
     },
     {
+      "src": "/api/case-studies",
+      "dest": "/api/case-studies.js"
+    },
+    {
+      "src": "/api/blog",
+      "dest": "/api/blog.js"
+    },
+    {
+      "src": "/api/about",
+      "dest": "/api/about.js"
+    },
+    {
+      "src": "/api/contact",
+      "dest": "/api/contact.js"
+    },
+    {
       "src": "/api/i18n/([^/]+)",
       "dest": "/api/i18n/[lang].js?lang=$1"
     },
