@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "username": "admin",
+    "password": "YWRtaW4xMjM=",
+    "role": "admin",
+    "createdAt": "2026-04-06T05:18:06.591Z"
+  },
+  {
+    "id": 1776083240472,
+    "username": "liwanxian",
+    "password": "MTIzNDU2",
+    "role": "admin",
+    "createdAt": "2026-04-13T12:27:20.472Z"
+  }
+]

@@ -1,0 +1,121 @@
+{
+  "intro_title": "Who We Are",
+  "intro_desc": "Foshan Jin Yu Advertising Material Co., Ltd is a professional manufacturer of advertising materials established in 2009. We are located in the U+Zhigu Industrial Park, LiShui Town, Nanhai District, Foshan City, Guangdong Province – one of China's most concentrated hubs for advertising material production.",
+  "business_desc": "Our business integrates design, research and development, production and sales of advertising materials including self adhesive vinyl, PVC flex banner, PVC foam board, acrylic sheet, aluminum composite panel, PP hollow sheet, reflective sheeting, display stands and sign-making accessories.",
+  "export_desc": "We export to Southeast Asia, Europe, the Americas, the Middle East and other global markets. Our products are known for durability, customizability, and competitive factory-direct pricing.",
+  "company_image": "/about-uploads/1775904662551-0auwzn.jpg",
+  "mission": "To provide advertising professionals and sign-making businesses worldwide with reliable, high-quality materials that enable outstanding creative work at competitive factory-direct prices.",
+  "vision": "To become a globally recognized name in advertising material manufacturing – known for product innovation, quality consistency, and strong long-term customer partnerships.",
+  "values": "Quality first. Honest dealing. Continuous improvement. Customer-centric development. Every product batch must meet the standard we set for ourselves – not just what's acceptable.",
+  "founded": "2009",
+  "location": "Foshan, Guangdong, China",
+  "certification": "ISO 9001:2015",
+  "product_lines": "12",
+  "export_markets": "50",
+  "contact_email": "vivian@materials-ad.com",
+  "timeline_image": "/about-uploads/1775904755237-9xms00.png",
+  "milestones": [
+    {
+      "year": "2009 · Year 1",
+      "title": "Company Established",
+      "desc": "Foshan Jin Yu Advertising Material Co., Ltd officially founded in Nanhai District, Foshan. Initial product range focused on PVC foam board and self adhesive vinyl for domestic market supply."
+    },
+    {
+      "year": "October 2012",
+      "title": "First International Clients – Canton Fair",
+      "desc": "Participated in the Canton Fair for the first time. Successfully established partnerships with overseas buyers from Southeast Asia, the Middle East, and Europe."
+    },
+    {
+      "year": "March 2013",
+      "title": "R&D Team Established",
+      "desc": "Dedicated research and development team formed to drive product innovation, custom formulation development, and technical support capabilities for international clients."
+    },
+    {
+      "year": "July 2013",
+      "title": "Production Capacity Expanded",
+      "desc": "Significant investment in new production lines and advanced equipment. Manufacturing capacity increased substantially to meet growing international order volumes."
+    },
+    {
+      "year": "2024",
+      "title": "ISO 9001 Certification Achieved",
+      "desc": "Successfully completed ISO 9001:2015 quality management system certification. Full quality documentation and continuous improvement systems formalized."
+    }
+  ],
+  "factory_images": [
+    {
+      "url": "/about-uploads/1775904813370-906jva.jpg",
+      "alt": "Factory Exterior"
+    },
+    {
+      "url": "/about-uploads/1775904827964-56znyf.jpg",
+      "alt": "Production Line"
+    },
+    {
+      "url": "/about-uploads/1775904839941-3px3ni.jpg",
+      "alt": "Equipment"
+    },
+    {
+      "url": "/about-uploads/1775904853926-54earc.jpg",
+      "alt": "Quality Control"
+    }
+  ],
+  "capacity_cards": [
+    {
+      "title": "Production Equipment",
+      "desc": "Advanced extrusion lines, calendering equipment, coating machines, and slitting systems expanded in 2023"
+    },
+    {
+      "title": "R&D Laboratory",
+      "desc": "In-house testing lab and R&D team for custom formulation, product development, and quality verification"
+    },
+    {
+      "title": "Export Warehouse",
+      "desc": "Dedicated export packaging zone with moisture-proof and shock-resistant packing for international shipping"
+    },
+    {
+      "title": "Quality Control Process",
+      "desc": "Raw material inspection → in-process checks → final testing → packaging verification → pre-shipment inspection"
+    },
+    {
+      "title": "Export Logistics",
+      "desc": "FOB Guangzhou / Foshan. LCL and FCL available. Major freight forwarder partnerships."
+    },
+    {
+      "title": "OEM / Custom Orders",
+      "desc": "Private label packaging, custom specifications, color matching, and dedicated production runs."
+    }
+  ],
+  "certifications": [],
+  "team_members": [
+    {
+      "visible": true,
+      "name": "Vivian",
+      "role": "Export Sales Manager",
+      "desc": "International B2B sales, client relations and export documentation. Direct contact for all international enquiries.",
+      "photo": "/about-uploads/1776012229059-x889gh.jpg",
+      "color": "#2563eb",
+      "initial": "V",
+      "email": "vivian@materials-ad.com"
+    },
+    {
+      "visible": true,
+      "name": "R&D Department",
+      "role": "Technical Development Team",
+      "desc": "Product innovation, custom formulation, quality control, and technical documentation for international compliance.",
+      "photo": "",
+      "color": "#E8751A",
+      "initial": "R",
+      "email": ""
+    },
+    {
+      "visible": true,
+      "name": "Production Team",
+      "role": "Manufacturing & QC",
+      "desc": "Experienced production workforce operating our expanded manufacturing facility with ISO 9001 quality procedures.",
+      "photo": "",
+      "color": "#3a7ab8",
+      "initial": "P",
+      "email": ""
+    }
+  ]
+}

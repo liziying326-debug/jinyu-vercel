@@ -1,0 +1,13 @@
+{
+  "name": "jinyu-2026-vercel",
+  "version": "1.0.0",
+  "description": "Jinyu Website - Vercel Full Stack Deployment",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "vercel": "^32.0.0"
+  }
+}

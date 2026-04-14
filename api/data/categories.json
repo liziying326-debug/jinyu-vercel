@@ -1,0 +1,50 @@
+[
+  {
+    "id": "advertising-media",
+    "name_en": "Advertising Media",
+    "name_zh": "广告介质",
+    "sort_order": 1,
+    "name_tl": "Advertising Media"
+  },
+  {
+    "id": "advertising-panel",
+    "name_en": "Advertising Panel",
+    "name_zh": "广告面板",
+    "sort_order": 2,
+    "name_tl": "Advertising Panel"
+  },
+  {
+    "id": "display-stand",
+    "name_en": "Display Stand",
+    "name_zh": "展示架",
+    "sort_order": 3,
+    "name_tl": "Display Stand"
+  },
+  {
+    "id": "accessory-tools",
+    "name": "Accessory Tools",
+    "name_en": "Accessory Tools",
+    "name_zh": "配件工具",
+    "name_vi": "Phụ kiện & Công cụ",
+    "name_tl": "Accessory Tools",
+    "desc": "High-quality mounting hardware, installation tools and accessories for signage projects",
+    "langData": {
+      "en": {
+        "name": "Accessory Tools",
+        "desc": "High-quality mounting hardware, installation tools and accessories for signage projects"
+      },
+      "zh": {
+        "name": "配件工具",
+        "desc": "高质量的安装五金件、安装工具和标牌项目配件"
+      },
+      "vi": {
+        "name": "Phụ kiện & Công cụ",
+        "desc": "Phần cứng lắp đặt chất lượng cao, công cụ lắp đặt và phụ kiện cho các dự án biển báo"
+      },
+      "tl": {
+        "name": "Mga Kagamitan at Kasangkapang Pantulong",
+        "desc": "Mga de-kalidad na mounting hardware, mga kagamitan sa pag-install at mga accessories para sa mga proyekto ng signage"
+      }
+    }
+  }
+]

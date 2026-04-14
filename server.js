@@ -392,6 +392,9 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // 产品 by-slug API：代理到后台（不走 handleProductDetail）
+  if (pathname.startsWith('/api/products/by-slug/')) return proxyToAdmin(req, res);
+
   // 产品详情API：/api/products/{id} → 从产品列表中查找
   const productDetailMatch = pathname.match(/^\/api\/products\/([^/]+)$/);
   if (productDetailMatch) return handleProductDetail(req, res, productDetailMatch[1]);
@@ -465,14 +468,52 @@ const server = http.createServer((req, res) => {
   // 根路径 → index.html
   if (pathname === '/') pathname = '/index.html';
 
+  // ── 干净 URL 路由（Clean URL rewrite）────────────────────────────
+  // /products              → products.html
+  // /products/:catSlug     → products.html（由页面 JS 读 pathname）
+  // /products/:catSlug/:productSlug → product-detail.html（由页面 JS 读 pathname）
+  // /about                 → about.html
+  // /contact               → contact.html
+  // /applications          → applications.html
+  // /case-studies          → case-studies.html
+  // /news                  → news.html
+  // /news/:slug            → news-detail.html（由页面 JS 读 pathname）
+  if (pathname === '/products') {
+    pathname = '/products.html';
+  } else if (pathname.startsWith('/products/')) {
+    // 两段：/products/:catSlug → products.html
+    // 三段：/products/:catSlug/:productSlug → product-detail.html
+    const parts = pathname.replace(/^\/products\//, '').split('/').filter(Boolean);
+    if (parts.length >= 2) {
+      pathname = '/product-detail.html';
+    } else {
+      pathname = '/products.html';
+    }
+  } else if (pathname === '/about') {
+    pathname = '/about.html';
+  } else if (pathname === '/contact') {
+    pathname = '/contact.html';
+  } else if (pathname === '/applications') {
+    pathname = '/applications.html';
+  } else if (pathname === '/case-studies' || pathname === '/cases') {
+    pathname = '/case-studies.html';
+  } else if (pathname === '/news') {
+    pathname = '/news.html';
+  } else if (pathname.startsWith('/news/')) {
+    pathname = '/news-detail.html';
+  }
+
   // 浏览量统计（仅统计真实访客，排除本地 IP）
   if (req.method === 'GET') {
     const clientIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress || '';
     const isLocal  = ['127.0.0.1','::1','::ffff:127.0.0.1'].some(ip => clientIp.startsWith(ip));
     if (!isLocal) {
-      // 如果是新闻详情页，从查询参数中获取 slug
+      // 如果是新闻详情页，从路径中获取 slug
       let slug = null;
-      if (pathname === '/news-detail.html') {
+      const origPathname = parsedUrl.pathname;
+      if (origPathname.startsWith('/news/')) {
+        slug = origPathname.replace('/news/', '').split('/')[0] || null;
+      } else if (origPathname === '/news-detail.html') {
         const query = parsedUrl.query || '';
         const params = new URLSearchParams(query);
         slug = params.get('slug') || null;
