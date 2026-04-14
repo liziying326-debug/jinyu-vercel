@@ -6,12 +6,5 @@
     "dev": "vercel dev",
     "deploy": "vercel --prod"
   },
-<<<<<<< HEAD
   "dependencies": {}
-=======
-  "dependencies": {},
-  "devDependencies": {
-    "vercel": "^32.0.0"
-  }
->>>>>>> 39848e10e65bd314b932a688afd763ca9a6f3e9a
 }
